@@ -10,10 +10,13 @@ class Pendaftaran extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_kelas',
         'id_eskul',
         'nama_siswa',
-        'alasan'
+        'kelas',
+        'no_wa',
+        'alasan',
+        'kesiapan',
+        'pengalaman'
     ];
 
     public function eskuls() {

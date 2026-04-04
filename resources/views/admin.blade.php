@@ -83,58 +83,40 @@
                     {{-- <div class="hero-mini-card summary-stack" id="summaryCards"></div> --}}
                 </section>
 
-                {{-- <div class="divider-line"></div>
+                <div class="eskul-grid">
 
-                <section class="layout-admin">
-                    <div class="panel-main">
-                        <div class="section-heading-inline">
-                            <div>
-                                <p class="eyebrow">Daftar Eskul</p>
-                                <h3>Kelola profil kegiatan</h3>
+                    @foreach ($eskul as $item)
+                        <div class="eskul-card">
+                            <div class="card-media">
+                                <div class="card-cover-art" style="background-image: url('{{ $item->foto ? asset('uploads/' . $item->foto) : '' }}'); background-size: cover; background-position: center;">
+                                    <div class="card-cover-overlay">
+                                        <div class="cover-badges">
+                                            <span><i class="fa-solid fa-layer-group"></i> {{ $item->kategori }}</span>
+                                        </div>
+                                        <strong>{{ $item->nama_eskul }}</strong>
+                                    </div>
+                                </div>
                             </div>
-                            <button class="btn-yellow" onclick="openTambahModal()">
-                                <i class="fa-solid fa-circle-plus"></i>
-                                Tambah Eskul
-                            </button>
+                            <div class="card-body">
+                                <div class="card-category">{{ $item->kategori }}</div>
+                                <div class="card-eskul-name">{{ $item->nama_eskul }}</div>
+                                <div class="card-slogan">“{{ $item->slogan }}”</div>
+                                <div class="card-deskripsi">{{ $item->deskripsi }}</div>
+                                <div class="meta-row">
+                                    <span><i class="fa-regular fa-user"></i> {{ $item->nama_pembina }}</span>
+                                    <span><i class="fa-regular fa-clock"></i>{{ $item->jadwal }}</span>
+                                    <span><i class="fa-solid fa-location-dot"></i> {{ $item->tempat }}</span>
+                                </div>
+                                <div class="card-actions">
+                                    <button class="btn-yellow" onclick="openEditModal(${item.id})"><i class="fa-solid fa-pen"></i> Edit</button>
+                                    <button class="btn-red"><i class="fa-solid fa-trash"></i></button>
+                                </div>
+                            </div>
                         </div>
+                    @endforeach
 
-                        <div class="eskul-grid" id="eskulGrid"></div>
-                    </div>
-
-                    <aside class="panel-preview" id="previewLive">
-                        <div class="preview-head">
-                            <p class="eyebrow">Preview</p>
-                            <h3>Tampilan detail di landing page</h3>
-                        </div>
-                        <div class="preview-article" id="previewArticle"></div>
-                    </aside>
-                </section> --}}
-
-                {{-- <section class="panel-wide" id="formBuilderSection">
-                    <div class="section-heading-inline">
-                        <div>
-                            <p class="eyebrow">Form Pendaftaran</p>
-                            <h3>Susun pertanyaan tambahan</h3>
-                        </div>
-                        <button class="btn-yellow" onclick="openQuestionModal()">
-                            <i class="fa-solid fa-plus"></i>
-                            Tambah Pertanyaan
-                        </button>
-                    </div>
-
-                    <div class="question-layout">
-                        <div class="question-list" id="questionList"></div>
-                        <div class="question-note glass-note">
-                            <strong>Catatan penggunaan</strong>
-                            <p>Field dasar seperti nama, kelas, kontak, eskul tujuan, dan alasan bergabung selalu tampil di form. Admin dapat menambahkan pertanyaan khusus sesuai kebutuhan seleksi.</p>
-                            <ul>
-                                <li>Gunakan tipe singkat untuk jawaban pendek.</li>
-                                <li>Gunakan paragraf untuk motivasi atau pengalaman.</li>
-                                <li>Gunakan pilihan jika jawaban ingin dibatasi.</li>
-                            </ul>
-                        </div>
-                    </div>
-                </section> --}}
+                    
+                </div>
 
                 <section class="panel-wide" id="pembina">
                     <div class="section-heading-inline wide-stack">
@@ -170,7 +152,8 @@
                                                 <td>{{ $item->nama_eskul ?? 'Belum dipilih' }}</td>
                                                 <td>
                                                     <form action="" method="POST">
-                                                        <button class="btn-red"><i class="fa-solid fa-trash-can"></i></button>
+                                                        @csrf
+                                                        <button type="submit" class="btn-red"><i class="fa-solid fa-trash-can"></i></button>
                                                     </form>
                                                 </td>
                                             </tr>
@@ -323,46 +306,75 @@
         </div>
     </div>
 
-    <div class="modal-overlay" id="modalTambah">
-        <div class="modal large-modal">
+    {{-- TAMBAH ESKUL --}}
+
+    @if(session('berhasil'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                showToast('{{ session('berhasil') }}');
+            });
+        </script>
+    @endif
+
+    @if(session('gagal'))
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                showToast_error('{{ session('gagal') }}');
+            });
+        </script>
+    @endif
+
+    @if ($errors->any())
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast_error(@json($errors->first()), 'error');
+        });
+        </script>
+    @endif
+
+
+
+    <div class="modal-overlay" id="modalTambah" >
+        <form class="modal large-modal" action="/eskul" method="POST" enctype="multipart/form-data">
+            @csrf
             <button class="modal-close" onclick="closeModal('modalTambah')"><i class="fa-solid fa-xmark"></i></button>
             <h2><i class="fa-solid fa-circle-plus"></i> Tambah eskul baru</h2>
             <div class="form-grid-two">
                 <div class="form-group">
                     <label>NAMA ESKUL</label>
-                    <input type="text" id="tambahNama" placeholder="Nama eskul baru">
+                    <input type="text" id="tambahNama" name="nama_eskul" placeholder="Nama eskul baru" value="{{ old('nama_eskul') }}">
                 </div>
                 <div class="form-group">
                     <label>KATEGORI</label>
-                    <input type="text" id="tambahKategori" placeholder="Kategori kegiatan">
+                    <input type="text" id="tambahKategori" name="kategori" placeholder="Kategori kegiatan" value="{{ old('kategori') }}"> 
                 </div>
             </div>
             <div class="form-group">
                 <label>SLOGAN</label>
-                <input type="text" id="tambahSlogan" placeholder="Slogan singkat">
+                <input type="text" id="tambahSlogan" name="slogan" placeholder="Slogan singkat" value="{{ old('slogan') }}">
             </div>
             <div class="form-group">
                 <label>DESKRIPSI</label>
-                <textarea id="tambahDeskripsi" placeholder="Deskripsi kegiatan"></textarea>
+                <textarea id="tambahDeskripsi" name="deskripsi" placeholder="Deskripsi kegiatan" value="{{ old('deskripsi') }}"></textarea>
             </div>
             <div class="form-grid-two">
                 <div class="form-group">
                     <label>PEMBINA</label>
-                    <input type="text" id="tambahPembina" placeholder="Nama pembina">
+                    <input type="text" id="tambahPembina" name="nama_pembina" placeholder="Nama pembina" value="{{ old('nama_pembina') }}">
                 </div>
                 <div class="form-group">
                     <label>JADWAL</label>
-                    <input type="text" id="tambahJadwal" placeholder="Contoh: Jumat, 15.30 - 17.00 WIB">
+                    <input type="text" id="tambahJadwal" name="jadwal" placeholder="Contoh: Jumat, 15.30 - 17.00 WIB" value="{{ old('jadwal') }}">
                 </div>
             </div>
             <div class="form-grid-two">
                 <div class="form-group">
                     <label>TEMPAT</label>
-                    <input type="text" id="tambahTempat" placeholder="Lokasi kegiatan">
+                    <input type="text" id="tambahTempat" name="tempat" placeholder="Lokasi kegiatan" value="{{ old('tempat') }}">
                 </div>
                 <div class="form-group">
                     <label>AKUN PEMBINA</label>
-                    <select name="id_pemegang" id="">
+                    <select name="id_pemegang">
                         <option selected disabled>--Pilih Akun Pembina--</option>
                         @foreach ($pembina as $item)
                             <option value="{{ $item->id_user }}">{{ $item->username }}</option> 
@@ -374,17 +386,17 @@
             <div class="form-group">
                 <label>FOTO COVER</label>
                 <div class="upload-zona">
-                    <input type="file" accept="image/*" id="tambahFileInput" onchange="previewTambah(event)">
+                    <input type="file" accept="image/*" id="tambahFileInput" onchange="previewTambah(event)" name="foto">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                     <span>Pilih gambar untuk cover eskul</span>
                 </div>
                 <img id="previewTambahImg" class="preview-img" alt="Preview cover baru">
             </div>
             <div class="modal-footer">
-                <button class="btn-outline" onclick="closeModal('modalTambah')">Batal</button>
-                <button class="btn-yellow" onclick="tambahEskul()"><i class="fa-solid fa-circle-plus"></i> Tambah</button>
+                <button type="button" class="btn-outline" onclick="closeModal('modalTambah')">Batal</button>
+                <button type="submit" class="btn-yellow"><i class="fa-solid fa-circle-plus"></i> Tambah</button>
             </div>
-        </div>
+        </form>
     </div>
 
     <div class="modal-overlay" id="modalQuestion">
@@ -410,6 +422,11 @@
     <div class="toast" id="toast">
         <i class="fa-solid fa-circle-check"></i>
         <span id="toastMsg">Tersimpan</span>
+    </div>
+
+    <div class="toast error" id="toast_error">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <span id="toastMsg_error">Error</span>
     </div>
 
     <script src="js/admin.js"></script>

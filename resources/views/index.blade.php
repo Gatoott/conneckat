@@ -105,7 +105,7 @@
                 @foreach ($eskul_list as $eskul)
 
                     <article class="eskul-mini-card">
-                        <div class="eskul-mini-cover" style="${coverStyle(item)}">
+                        <div class="eskul-mini-cover" style="background-image: url('{{ $eskul->foto ? asset('uploads/' . $eskul->foto) : '' }}'); background-size: cover; background-position: center;">
                             <span class="cover-chip"><i class="fa-solid fa-star"></i>{{ $eskul->kategori }}</span>
                         </div>
                         <div class="eskul-mini-body">
@@ -292,7 +292,7 @@
                 <div class="team-grid">
                     <article class="team-card glass-panel">
                         <small>Project Manager</small>
-                        <strong>Nindri</strong>
+                        <strong></strong>
                         <p>Mengatur arah pengerjaan, alur tugas, dan sinkronisasi tim.</p>
                     </article>
                     <article class="team-card glass-panel">
@@ -307,12 +307,12 @@
                     </article>
                     <article class="team-card glass-panel">
                         <small>Analisis</small>
-                        <strong>Iki</strong>
+                        <strong>Iki & Fauzan</strong>
                         <p>Menyusun kebutuhan sistem, alur data, dan gambaran penggunaan aplikasi.</p>
                     </article>
                     <article class="team-card glass-panel wide">
                         <small>Design</small>
-                        <strong>Oxa &amp; Fauzan</strong>
+                        <strong>Oxa, Ezar, Arfa, Nindri, Rahma</strong>
                         <p>Menyiapkan konsep visual, pemilihan warna, penataan elemen, dan arah estetika project.</p>
                     </article>
                 </div>

@@ -16,3 +16,4 @@ Route::post('/register', [UserController::class, 'register']);
 
 Route::get('/admin', [AdminController::class, 'admin']);
 Route::post('/pembina', [UserController::class, 'store']);
+Route::post('/eskul', [EskulController::class, 'store']);

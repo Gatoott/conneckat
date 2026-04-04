@@ -874,6 +874,14 @@ select:focus{
     color:var(--success);
 }
 
+.toast.error i {
+    color: var(--danger);
+}
+
+.toast.error {
+    border-color: rgba(255, 111, 125, 0.42);
+}
+
 .reg-table-wrap {
     width: 100%;
     overflow-x: auto;

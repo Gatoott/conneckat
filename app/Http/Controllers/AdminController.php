@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Eskul;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,11 +24,9 @@ class AdminController extends Controller
 
         $query = DB::table('pendaftarans')
             ->join('eskuls', 'pendaftarans.id_eskul', '=', 'eskuls.id_eskul')
-            ->join('kelas', 'pendaftarans.id_kelas', '=', 'kelas.id_kelas')
             ->select(
                 'pendaftarans.*',
                 'eskuls.nama_eskul',
-                'kelas.nama_kelas'
             );
 
         if ($role !== 'admin') {
@@ -41,7 +40,14 @@ class AdminController extends Controller
                 ->where('users.role', 'pembina')
                 ->select('users.*','eskuls.*',)->get();
 
-        return view('admin', compact('pendaftar', 'role', 'pembina'));
+        if($role == 'admin') {
+            $eskul = Eskul::all();
+        }
+        else {
+            $eskul = Eskul::where('id_pemegang', $user->id_user)->get();
+        }
+
+        return view('admin', compact('pendaftar', 'role', 'pembina', 'eskul'));
     }
     
 }

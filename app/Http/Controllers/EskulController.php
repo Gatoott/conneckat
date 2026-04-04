@@ -35,10 +35,12 @@ class EskulController extends Controller
     {
         $user = Auth::user();
 
+        if(!$user) {
+            return view('/login');
+        }
+
         if($user->role != 'admin') {
-            return response()->json([
-                'pesan' => 'anda bukan pembina eskul'
-            ], 403);
+            return view('/');
         }
 
         $request->validate([
@@ -46,9 +48,10 @@ class EskulController extends Controller
             'kategori' => 'required',
             'slogan' => 'required',
             'deskripsi' => 'required',
-            'pembina' => 'required',
+            'nama_pembina' => 'required',
             'jadwal' => 'required',
             'tempat' => 'required',
+            'id_pemegang' => 'required',
             'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
@@ -59,19 +62,21 @@ class EskulController extends Controller
         $foto->move(public_path('uploads'), $file_foto);
 
         $eskul = Eskul::create([
-            'id_pemegang' => Auth::id(),
             'nama_eskul' => $request->nama_eskul,
+            'kategori' => $request->kategori,
             'slogan' => $request->slogan,
             'deskripsi' => $request->deskripsi,
-            'foto' => $request->foto,
-            'pendaftaran' => $request->pendaftaran
+            'nama_pembina' => $request->nama_pembina,
+            'jadwal' => $request->jadwal,
+            'tempat' => $request->tempat,
+            'id_pemegang' => $request->id_pemegang,
+            'foto' => $file_foto,
         ]);
 
-        return response()->json([
-            'messagge' => 'Berhasil membuat eskul!',
-            'data' => $eskul,
-            'foto' => asset('uploads/'. $file_foto),
-        ], 200);
+        if(!$eskul) {
+            return redirect()->back()->with('gagal', 'Gagal membuat eskul');
+        }
+        return redirect()->back()->with('berhasil', 'Berhasil membuat eskul');
 
     }
 
