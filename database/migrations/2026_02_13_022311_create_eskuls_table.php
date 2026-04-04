@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('eskuls', function (Blueprint $table) {
             $table->id('id_eskul');
-            $table->foreignId('id_pemegang')->constrained('Users', 'id_user');
+            $table->foreignId('id_pemegang')->constrained('Users', 'id_user')->onDelete('cascade');
             $table->string('nama_eskul');
             $table->string('kategori');
             $table->string('slogan');

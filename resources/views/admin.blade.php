@@ -10,7 +10,19 @@
 </head>
 <body>
     <div class="admin-shell">
-        <aside class="sidebar">
+
+        <div class="mobile-topbar">
+            <div class="mobile-brand">
+                {{-- <img src="poto/logo.png" alt="Logo" onerror="this.style.display='none'"> --}}
+                    <img src="poto/logo.png" class="logo" alt="Logo Conneckat">
+                <span>CONNECKAT</span>
+            </div>
+            <button class="sidebar-hamburger" id="sidebarHamburger" onclick="toggleSidebar()">
+                <i class="fa-solid fa-bars" id="sidebarIcon"></i>
+            </button>
+        </div>
+
+        <aside class="sidebar" id="sidebar">
             <div class="sidebar-logo">
                 <img src="poto/logo.png" alt="Logo Conneckat" onerror="this.style.display='none'">
                 <div>
@@ -108,8 +120,25 @@
                                     <span><i class="fa-solid fa-location-dot"></i> {{ $item->tempat }}</span>
                                 </div>
                                 <div class="card-actions">
-                                    <button class="btn-yellow" onclick="openEditModal(${item.id})"><i class="fa-solid fa-pen"></i> Edit</button>
-                                    <button class="btn-red"><i class="fa-solid fa-trash"></i></button>
+
+                                    <button class="btn-yellow" onclick="openEditModal(
+                                        {{ $item->id_eskul }},
+                                        '{{ $item->nama_eskul }}',
+                                        '{{ $item->kategori }}',
+                                        '{{ $item->slogan }}',
+                                        '{{ addslashes($item->deskripsi) }}',
+                                        '{{ $item->nama_pembina }}',
+                                        '{{ $item->jadwal }}',
+                                        '{{ $item->tempat }}',
+                                        '{{ $item->id_pemegang }}' )">
+                                        <i class="fa-solid fa-pen"></i> Edit
+                                    </button>
+
+                                    <form action="{{ route('eskul_destory', $item->id_eskul) }}" method="POST">
+                                        @csrf
+                                        <button class="btn-red"><i class="fa-solid fa-trash"></i></button>
+                                    </form>
+
                                 </div>
                             </div>
                         </div>
@@ -151,7 +180,7 @@
                                                 <td>{{ $item->username }}</td>
                                                 <td>{{ $item->nama_eskul ?? 'Belum dipilih' }}</td>
                                                 <td>
-                                                    <form action="" method="POST">
+                                                    <form action="{{ route('pembina_destroy', $item->id_user) }}" method="POST">
                                                         @csrf
                                                         <button type="submit" class="btn-red"><i class="fa-solid fa-trash-can"></i></button>
                                                     </form>
@@ -230,109 +259,106 @@
         </div>
     </div>
 
+    {{-- EDIT --}}
+
     <div class="modal-overlay" id="modalEdit">
         <div class="modal large-modal">
-            <button class="modal-close" onclick="closeModal('modalEdit')"><i class="fa-solid fa-xmark"></i></button>
-            <h2><i class="fa-solid fa-pen"></i> Edit profil eskul</h2>
-            <input type="hidden" id="editId">
-            <div class="form-grid-two">
-                <div class="form-group">
-                    <label>NAMA ESKUL</label>
-                    <input type="text" id="editNama" placeholder="Nama eskul">
+            <form id="formEdit" action="" method="POST" enctype="multipart/form-data">
+                @csrf
+                @method('PUT')
+                <button type="button" class="modal-close" onclick="closeModal('modalEdit')"><i class="fa-solid fa-xmark"></i></button>
+                <h2><i class="fa-solid fa-pen"></i> Edit profil eskul</h2>
+
+                <div class="form-grid-two">
+                    <div class="form-group">
+                        <label>NAMA ESKUL</label>
+                        <input type="text" name="nama_eskul" id="editNamaEskul" placeholder="Nama eskul">
+                    </div>
+                    <div class="form-group">
+                        <label>KATEGORI</label>
+                        <input type="text" name="kategori" id="editKategori" placeholder="Kategori">
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label>KATEGORI</label>
-                    <input type="text" id="editKategori" placeholder="Olahraga / Organisasi / Bahasa / Seni">
-                </div>
-            </div>
-            <div class="form-group">
-                <label>SLOGAN</label>
-                <input type="text" id="editSlogan" placeholder="Slogan singkat">
-            </div>
-            <div class="form-group">
-                <label>DESKRIPSI</label>
-                <textarea id="editDeskripsi" placeholder="Deskripsi kegiatan"></textarea>
-            </div>
-            <div class="form-grid-two">
-                <div class="form-group">
-                    <label>PEMBINA</label>
-                    <input type="text" id="editPembina" placeholder="Nama pembina">
+                    <label>SLOGAN</label>
+                    <input type="text" name="slogan" id="editSlogan" placeholder="Slogan singkat">
                 </div>
                 <div class="form-group">
-                    <label>JADWAL</label>
-                    <input type="text" id="editJadwal" placeholder="Contoh: Selasa, 15.30 - 17.00 WIB">
+                    <label>DESKRIPSI</label>
+                    <textarea name="deskripsi" id="editDeskripsi" placeholder="Deskripsi kegiatan"></textarea>
                 </div>
-            </div>
-            <div class="form-grid-two">
+                <div class="form-grid-two">
+                    <div class="form-group">
+                        <label>PEMBINA</label>
+                        <input type="text" name="nama_pembina" id="editNamaPembina" placeholder="Nama pembina">
+                    </div>
+                    <div class="form-group">
+                        <label>JADWAL</label>
+                        <input type="text" name="jadwal" id="editJadwal" placeholder="Jadwal">
+                    </div>
+                </div>
+                <div class="form-grid-two">
+                    <div class="form-group">
+                        <label>TEMPAT</label>
+                        <input type="text" name="tempat" id="editTempat" placeholder="Tempat">
+                    </div>
+                    <div class="form-group">
+                        <label>AKUN PEMBINA</label>
+                        <select name="id_pemegang" id="editIdPemegang">
+                            <option selected disabled>--Pilih Akun Pembina--</option>
+                            @foreach ($pembina as $p)
+                                <option value="{{ $p->id_user }}">{{ $p->username }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
                 <div class="form-group">
-                    <label>TEMPAT</label>
-                    <input type="text" id="editTempat" placeholder="Lokasi kegiatan">
+                    <label>FOTO COVER</label>
+                    <div class="upload-zona">
+                        <input type="file" accept="image/*" name="foto" onchange="previewTambah(event)">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Pilih gambar untuk cover eskul</span>
+                    </div>
+                    <img id="previewTambahImg" class="preview-img" alt="Preview cover baru">
                 </div>
-                <div class="form-group">
-                    <label>KUOTA</label>
-                    <input type="text" id="editKuota" placeholder="Contoh: 30 siswa">
+                <div class="modal-footer">
+                    <button type="button" class="btn-outline" onclick="closeModal('modalEdit')">Batal</button>
+                    <button type="submit" class="btn-yellow"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
                 </div>
-            </div>
-            <div class="form-group">
-                <label>WARNA COVER (CSS GRADIENT)</label>
-                <input type="text" id="editCover" placeholder="linear-gradient(135deg, #7ee8ff 0%, #1943b5 100%)">
-            </div>
-            <div class="modal-footer">
-                <button class="btn-outline" onclick="closeModal('modalEdit')">Batal</button>
-                <button class="btn-yellow" onclick="simpanEdit()"><i class="fa-solid fa-floppy-disk"></i> Simpan</button>
-            </div>
+            </form>
         </div>
     </div>
 
-    <div class="modal-overlay" id="modalUpload">
-        <div class="modal">
-            <button class="modal-close" onclick="closeModal('modalUpload')"><i class="fa-solid fa-xmark"></i></button>
-            <h2><i class="fa-solid fa-image"></i> Upload cover eskul</h2>
-            <input type="hidden" id="uploadId">
-            <div class="form-group">
-                <label>PILIH FOTO</label>
-                <div class="upload-zona">
-                    <input type="file" accept="image/*" id="fileInput" onchange="previewFoto(event)">
-                    <i class="fa-solid fa-cloud-arrow-up"></i>
-                    <span>Klik atau drop gambar di sini</span>
-                    <p>Jika tidak upload foto, landing page tetap memakai cover gradient.</p>
-                </div>
-                <img id="previewImg" class="preview-img" alt="Preview cover">
-            </div>
-            <div class="modal-footer">
-                <button class="btn-outline" onclick="closeModal('modalUpload')">Batal</button>
-                <button class="btn-yellow" onclick="simpanFoto()"><i class="fa-solid fa-floppy-disk"></i> Simpan Foto</button>
-            </div>
-        </div>
-    </div>
 
-    {{-- TAMBAH ESKUL --}}
+    
+    {{-- notif --}}
 
     @if(session('berhasil'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                showToast('{{ session('berhasil') }}');
-            });
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast('{{ session('berhasil') }}');
+        });
         </script>
     @endif
-
+    
     @if(session('gagal'))
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
                 showToast_error('{{ session('gagal') }}');
             });
         </script>
     @endif
 
     @if ($errors->any())
-        <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function() {
             showToast_error(@json($errors->first()), 'error');
         });
         </script>
     @endif
-
-
+    
+    
+    {{-- TAMBAH ESKUL --}}
 
     <div class="modal-overlay" id="modalTambah" >
         <form class="modal large-modal" action="/eskul" method="POST" enctype="multipart/form-data">

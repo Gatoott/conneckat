@@ -21,14 +21,6 @@ class EskulController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -81,34 +73,54 @@ class EskulController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Eskul $eskul)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Eskul $eskul)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Eskul $eskul)
+    public function update(Request $request, $id_eskul)
     {
-        //
+        $eskul = Eskul::findOrFail($id_eskul);
+
+        $request->validate([
+            'nama_eskul' => 'required',
+            'kategori' => 'required',
+            'slogan' => 'required',
+            'deskripsi' => 'required',
+            'nama_pembina' => 'required',
+            'jadwal' => 'required',
+            'tempat' => 'required',
+            'id_pemegang' => 'required',
+        ]);
+
+        if($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+            $file_foto = time(). '-' . $foto->getClientOriginalName();
+            $foto->move(public_path('uploads'), $file_foto);
+
+            $eskul->foto = $file_foto;
+        }
+
+        $eskul->update([
+            'nama_eskul' => $request->nama_eskul,
+            'kategori' => $request->kategori,
+            'slogan' => $request->slogan,
+            'deskripsi' => $request->deskripsi,
+            'nama_pembina' => $request->nama_pembina,
+            'jadwal' => $request->jadwal,
+            'tempat' => $request->tempat,
+            'id_pemegang' => $request->id_pemegang,
+        ]);
+
+        return redirect()->back()->with('berhasil', 'Berhasil mengedit eskul!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Eskul $eskul)
+    public function destroy($id_eskul)
     {
-        //
+        $eskul = Eskul::findOrFail($id_eskul);
+
+        $eskul->delete();
+
+        return redirect()->back()->with('berhasil', 'Berhasil mengahapus Eskul');
     }
 }

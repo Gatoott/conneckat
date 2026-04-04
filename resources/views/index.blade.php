@@ -22,15 +22,21 @@
                     </div>
                 </a>
 
-                <nav class="pindah" aria-label="Navigasi utama">
-                    <a href="#home">Home</a>
-                    <a href="#eskul">Eskul</a>
-                    <a href="#pendaftaran">Pendaftaran</a>
-                    <a href="#about-project">About Us</a>
-                </nav>
+                <button class="hamburger" id="hamburger" onclick="toggleMenu()">
+                    <i class="fa-solid fa-bars" id="hamburgerIcon"></i>
+                </button>
 
-                <div class="daftar">
-                    <a href="/login" class="login">login</a>
+                <div class="nav-wrap" id="navWrap">
+                    <nav class="pindah" aria-label="Navigasi utama">
+                        <a href="#home">Home</a>
+                        <a href="#eskul">Eskul</a>
+                        <a href="#pendaftaran">Pendaftaran</a>
+                        <a href="#about-project">About Us</a>
+                    </nav>
+    
+                    <div class="daftar">
+                        <a href="/login" class="login">login</a>
+                    </div>
                 </div>
             </div>
         </div>
@@ -110,13 +116,14 @@
                         </div>
                         <div class="eskul-mini-body">
                             <h3>{{ $eskul->nama_eskul }}</h3>
-                            <p>${{ $eskul->slogan }}</p>
+                            <p class="quote">“{{ $eskul->slogan }}”</p>
+                            <p lass="featured-copy">{{ $eskul->deskripsi }}</p>
                             <div class="mini-meta">
+                                <span><i class="fa-regular fa-user"></i>{{ $eskul->nama_pembina }}</span>
                                 <span><i class="fa-regular fa-clock"></i>{{ $eskul->jadwal }}</span>
                                 <span><i class="fa-solid fa-location-dot"></i>{{ $eskul->tempat }}</span>
                             </div>
                             <div class="mini-card-actions">
-                                <button type="button" class="mini-cta" data-action="detail">Lihat detail</button>
                                 <a href="#pendaftaran" class="mini-cta" data-action="register">Daftar sekarang</a>
                             </div>
                         </div>

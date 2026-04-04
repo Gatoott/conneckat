@@ -15,5 +15,10 @@ Route::post('/register', [UserController::class, 'register']);
 
 
 Route::get('/admin', [AdminController::class, 'admin']);
+
 Route::post('/pembina', [UserController::class, 'store']);
+Route::post('/delete-pembina/{id_user}', [UserController::class, 'destroy'])->name('pembina_destroy');
+
 Route::post('/eskul', [EskulController::class, 'store']);
+Route::put('/eskul/{id_eskul}', [EskulController::class, 'update'])->name('eskul_update');
+Route::post('/eskul/{id_eskul}', [EskulController::class, 'destroy'])->name('eskul_destory');

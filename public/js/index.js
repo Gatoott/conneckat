@@ -44,6 +44,14 @@ function togglePassword(inputId, iconId) {
     }
 }
 
+function toggleMenu() {
+    const navWrap = document.getElementById('navWrap');
+    const icon = document.getElementById('hamburgerIcon');
+    navWrap.classList.toggle('open');
+    icon.classList.toggle('fa-bars');
+    icon.classList.toggle('fa-xmark');
+}
+
 // (function () {
 //     const STORAGE_KEY = 'conneckatEskulDataV2';
 //     const FORM_STORAGE_KEY = 'conneckatRegistrationFieldsV2';

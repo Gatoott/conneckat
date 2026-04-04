@@ -12,11 +12,12 @@ class AdminController extends Controller
 {
     public function admin() {
         $user = Auth::user();
-        $role = $user->role;
-
+        
         if (!$user) {
             return redirect('/login');
         }
+            
+        $role = $user->role;
 
         if($role !== 'admin' && $role !== 'pembina') {
             return redirect('/');

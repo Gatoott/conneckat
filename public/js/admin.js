@@ -402,21 +402,18 @@ function togglePassword(inputId, iconId) {
     }
 }
 
-function openEditModal(id) {
-    const item = eskulData[id];
-    if (!item) return;
-    document.getElementById('editId').value = id;
-    document.getElementById('editNama').value = item.nama || '';
-    document.getElementById('editKategori').value = item.kategori || '';
-    document.getElementById('editSlogan').value = item.slogan || '';
-    document.getElementById('editDeskripsi').value = item.deskripsi || '';
-    document.getElementById('editPembina').value = item.pembina || '';
-    document.getElementById('editJadwal').value = item.jadwal || '';
-    document.getElementById('editTempat').value = item.tempat || '';
-    document.getElementById('editKuota').value = item.kuota || '';
-    document.getElementById('editCover').value = item.cover || '';
+function openEditModal(id, nama, kategori, slogan, deskripsi, pembina, jadwal, tempat, idPemegang) {
+    document.getElementById('formEdit').action = '/eskul/' + id;
+    document.getElementById('editNamaEskul').value = nama;
+    document.getElementById('editKategori').value = kategori;
+    document.getElementById('editSlogan').value = slogan;
+    document.getElementById('editDeskripsi').value = deskripsi;
+    document.getElementById('editNamaPembina').value = pembina;
+    document.getElementById('editJadwal').value = jadwal;
+    document.getElementById('editTempat').value = tempat;
+    document.getElementById('editIdPemegang').value = idPemegang;
     document.getElementById('modalEdit').classList.add('show');
-}
+}   
 
 function openUploadModal(id) {
     document.getElementById('uploadId').value = id;
@@ -427,17 +424,31 @@ function openUploadModal(id) {
 }
 
 function openTambahModal() {
-    document.getElementById('tambahNama').value = '';
-    document.getElementById('tambahKategori').value = '';
-    document.getElementById('tambahSlogan').value = '';
-    document.getElementById('tambahDeskripsi').value = '';
-    document.getElementById('tambahPembina').value = '';
-    document.getElementById('tambahJadwal').value = '';
-    document.getElementById('tambahTempat').value = '';
-    document.getElementById('tambahFileInput').value = '';
     document.getElementById('previewTambahImg').style.display = 'none';
     tambahFile = null;
     document.getElementById('modalTambah').classList.add('show');
+}
+
+function previewTambah(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        const img = document.getElementById('previewTambahImg');
+        img.src = ev.target.result;
+        img.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const icon = document.getElementById('sidebarIcon');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+    icon.classList.toggle('fa-bars');
+    icon.classList.toggle('fa-xmark');
 }
 
 function openQuestionModal() {
