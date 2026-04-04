@@ -100,7 +100,30 @@
                 <p>Setiap eskul sudah dilengkapi deskripsi, pembina, tempat, jadwal latihan, serta kategori agar siswa bisa mempertimbangkan pilihan dengan lebih jelas.</p>
             </div>
 
-            <div class="eskul-grid" id="eskulPreviewGrid"></div>
+            <div class="eskul-grid" id="eskulPreviewGrid">
+
+                @foreach ($eskul_list as $eskul)
+
+                    <article class="eskul-mini-card">
+                        <div class="eskul-mini-cover" style="${coverStyle(item)}">
+                            <span class="cover-chip"><i class="fa-solid fa-star"></i>{{ $eskul->kategori }}</span>
+                        </div>
+                        <div class="eskul-mini-body">
+                            <h3>{{ $eskul->nama_eskul }}</h3>
+                            <p>${{ $eskul->slogan }}</p>
+                            <div class="mini-meta">
+                                <span><i class="fa-regular fa-clock"></i>{{ $eskul->jadwal }}</span>
+                                <span><i class="fa-solid fa-location-dot"></i>{{ $eskul->tempat }}</span>
+                            </div>
+                            <div class="mini-card-actions">
+                                <button type="button" class="mini-cta" data-action="detail">Lihat detail</button>
+                                <a href="#pendaftaran" class="mini-cta" data-action="register">Daftar sekarang</a>
+                            </div>
+                        </div>
+                    </article>
+
+                @endforeach
+            </div>
 
             <div class="cta-split">
                 <div class="cta-card daftar-eskul">
@@ -119,7 +142,7 @@
             </div>
         </section>
 
-        <section id="tentang-detail" class="detail-section">
+        {{-- <section id="tentang-detail" class="detail-section">
             <div class="section-heading">
                 <span class="section-badge">Profil Eskul</span>
                 <h2>Detail kegiatan dibuat lebih jelas dan enak dibaca</h2>
@@ -130,7 +153,7 @@
                 <article class="featured-article" id="featuredEskul"></article>
                 <aside class="article-sidebar" id="eskulArticleGrid"></aside>
             </div>
-        </section>
+        </section> --}}
 
         <section id="pendaftaran" class="registration-section">
             <div class="section-heading center">
@@ -164,7 +187,59 @@
                 </aside>
 
                 <div class="registration-form-shell glass-panel">
-                    <form id="registrationForm" class="registration-form"></form>
+                    <form id="registrationForm" class="registration-form">
+                        @csrf
+
+                        <div class="form-group">
+                            <label for="namaLengkap">Nama Lengkap</label>
+                            <input id="namaLengkap" name="namaLengkap" type="text" placeholder="Masukkan nama lengkap" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="kelas">Kelas</label>
+                            <input id="kelas" name="kelas" type="text" placeholder="Contoh: XI PPLG 1" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="kontak">Nomor WhatsApp</label>
+                            <input id="kontak" name="kontak" type="number" placeholder="Nomor yang bisa dihubungi" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="eskulTujuan">Pilih Eskul</label>
+                            <select id="eskulTujuan" name="eskulTujuan" required>
+                                <option value="">Pilih jawaban</option>
+                                @foreach($eskul_list as $eskul)
+                                    <option value="{{ $eskul->id_eskul }}">{{ $eskul->nama_eskul }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="alasan">Alasan Bergabung</label>
+                            <textarea id="alasan" name="alasan" placeholder="Tuliskan alasan kamu memilih eskul ini" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="motivasiLatihan">Kesiapan Mengikuti Latihan</label>
+                            <select id="motivasiLatihan" name="motivasiLatihan" required>
+                                <option value="">Pilih jawaban</option>
+                                <option value="Siap hadir rutin">Siap hadir rutin</option>
+                                <option value="Perlu menyesuaikan jadwal">Perlu menyesuaikan jadwal</option>
+                                <option value="Masih mempertimbangkan">Masih mempertimbangkan</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full">
+                            <label for="pengalamanAwal">Pengalaman atau Kemampuan Awal</label>
+                            <textarea id="pengalamanAwal" name="pengalamanAwal" placeholder="Jelaskan pengalaman, kemampuan, atau hal yang ingin dikembangkan"></textarea>
+                        </div>
+
+                        <div class="submit-row">
+                            <button class="submit-btn" type="submit">Kirim Pendaftaran</button>
+                            <span>Setelah formulir dikirim, data akan masuk ke dashboard pengelola.</span>
+                        </div>
+                    </form>
                     <div id="registrationMessage" class="registration-message" aria-live="polite"></div>
                 </div>
             </div>

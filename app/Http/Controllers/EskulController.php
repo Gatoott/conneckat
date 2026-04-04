@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Eskul;
+use App\Models\kelas;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,7 +14,10 @@ class EskulController extends Controller
      */
     public function index()
     {
-        //
+        $eskul_list = Eskul::all();
+        $kelas_list = kelas::all();
+
+        return view('index', compact('eskul_list', 'kelas_list'));
     }
 
     /**

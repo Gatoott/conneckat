@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id('id_eskul');
             $table->foreignId('id_pemegang')->constrained('Users', 'id_user');
             $table->string('nama_eskul');
+            $table->string('kategori');
             $table->string('slogan');
             $table->string('deskripsi');
-            $table->string('pendaftaran');
-            $table->string('logo');
-            $table->string('dokumentasi');
+            $table->string('nama_pembina');
+            $table->string('jadwal');
+            $table->string('tempat');
+            $table->string('foto');
             $table->timestamps();
         });
     }
