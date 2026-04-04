@@ -35,7 +35,7 @@ class EskulController extends Controller
     {
         $user = Auth::user();
 
-        if($user->role != 'pembina') {
+        if($user->role != 'admin') {
             return response()->json([
                 'pesan' => 'anda bukan pembina eskul'
             ], 403);
@@ -43,37 +43,34 @@ class EskulController extends Controller
 
         $request->validate([
             'nama_eskul' => 'required',
+            'kategori' => 'required',
             'slogan' => 'required',
             'deskripsi' => 'required',
-            'pendaftaran' => 'required',
-            'logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'dokumentasi' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'pembina' => 'required',
+            'jadwal' => 'required',
+            'tempat' => 'required',
+            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $logo = $request->file('logo');
-        $dokumentasi = $request->file('dokumentasi');
+        $foto = $request->file('foto');
 
-        $file_logo = time(). '-' . $logo->getClientOriginalName();
-        $file_dokumentasi = time(). '-' . $dokumentasi->getClientOriginalName();
+        $file_foto = time(). '-' . $foto->getClientOriginalName();
         
-        $logo->move(public_path('uploads'), $file_logo);
-        $dokumentasi->move(public_path('uploads'), $file_dokumentasi);
+        $foto->move(public_path('uploads'), $file_foto);
 
         $eskul = Eskul::create([
             'id_pemegang' => Auth::id(),
             'nama_eskul' => $request->nama_eskul,
             'slogan' => $request->slogan,
             'deskripsi' => $request->deskripsi,
-            'logo' => $request->logo,
-            'dokumentasi' => $request->dokumentasi,
+            'foto' => $request->foto,
             'pendaftaran' => $request->pendaftaran
         ]);
 
         return response()->json([
             'messagge' => 'Berhasil membuat eskul!',
             'data' => $eskul,
-            'logo' => asset('uploads/'. $file_logo),
-            'dokumentasi' => asset('uploads/'. $file_dokumentasi),
+            'foto' => asset('uploads/'. $file_foto),
         ], 200);
 
     }

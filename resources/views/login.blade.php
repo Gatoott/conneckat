@@ -54,19 +54,10 @@
                 </div>
 
                 <div class="login" id="loginForm">
-                    <form action="index.php" method="POST">
+                    <form action="/login" method="POST">
+                        @csrf
                         <h2>Login</h2>
                         <p class="form-subtitle">Pilih tipe akses lalu masuk dengan username dan password yang sesuai.</p>
-
-                        <div class="input-box select-box">
-                            <select name="tipe_akses" required>
-                                <option value="">Pilih tipe akses</option>
-                                <option value="siswa">Siswa</option>
-                                <option value="admin">Admin</option>
-                            </select>
-                            <label>Tipe Akses</label>
-                            <i class="bx bxs-id-card"></i>
-                        </div>
 
                         <div class="input-box">
                             <input type="text" name="username" autocomplete="off" minlength="3" pattern=".{1,40}" title="Username maksimal 40 karakter" required>
@@ -91,7 +82,8 @@
                 </div>
 
                 <div class="registrasi" id="registrasiForm">
-                    <form action="index.php" method="POST">
+                    <form action="/register" method="POST">
+                        @csrf
                         <h2>Registrasi</h2>
                         <p class="form-subtitle">Registrasi ini disiapkan untuk akun siswa yang akan dipakai pada proses pendaftaran kegiatan.</p>
 

@@ -25,10 +25,12 @@
                     <i class="fa-solid fa-grid-2"></i>
                     <span>Data Eskul</span>
                 </a>
-                <a class="menu-item" href="#formBuilderSection">
-                    <i class="fa-solid fa-clipboard-question"></i>
-                    <span>Form Pendaftaran</span>
-                </a>
+                @if ($role == 'admin')
+                    <a class="menu-item" href="#pembina">
+                        <i class="fa-solid fa-users-viewfinder"></i>
+                        <span>Data Pembina</span>
+                    </a>
+                @endif
                 <a class="menu-item" href="#registrantSection">
                     <i class="fa-solid fa-users-viewfinder"></i>
                     <span>Data Pendaftar</span>
@@ -39,16 +41,24 @@
                 </a>
             </nav>
 
+            @if ($role == 'admin')
+                <button class="menu-item" onclick="openTambahModal()" style="background: transparent">
+                    <i class="fa-solid fa-circle-plus"></i>
+                    <span>Tambah Eskul</span>
+                </button>
+            @endif
+            
             <div class="sidebar-bottom">
                 <button class="logout-btn" onclick="window.location.href='/'">
                     <i class="fa-solid fa-right-from-bracket"></i>
                     <span>Tutup Panel</span>
                 </button>
             </div>
+
         </aside>
 
         <div class="main">
-            <header class="topbar">
+            {{-- <header class="topbar">
                 <div>
                     <p class="eyebrow">Panel Pengelolaan</p>
                     <h1 class="topbar-title">Data eskul, form pendaftaran, dan daftar pendaftar</h1>
@@ -56,24 +66,24 @@
                 <div class="topbar-right">
                     <a class="topbar-home" href="/">Lihat Landing Page</a>
                 </div>
-            </header>
+            </header> --}}
 
             <main class="content">
                 <section class="hero-admin" id="dashboardPreview">
                     <div class="hero-copy">
                         <span class="hero-badge">Admin Workspace</span>
-                        <h2>Kelola konten Conneckat dalam satu panel</h2>
-                        <p>Panel ini dipakai untuk memperbarui data eskul, menyusun pertanyaan form pendaftaran, dan melihat siapa saja yang sudah mengirim formulir.</p>
+                        <h2>Selamat datang di Dashboard</h2>
+                        <p>Panel ini dipakai untuk melihat siapa saja yang sudah mengirim formulir pendaftaran eskul.</p>
                         <div class="hero-points">
-                            <span>Data eskul siap edit</span>
+                            {{-- <span>Data eskul siap edit</span>
                             <span>Pertanyaan bisa ditambah</span>
-                            <span>Data pendaftar siap cek</span>
+                            <span>Data pendaftar siap cek</span> --}}
                         </div>
                     </div>
-                    <div class="hero-mini-card summary-stack" id="summaryCards"></div>
+                    {{-- <div class="hero-mini-card summary-stack" id="summaryCards"></div> --}}
                 </section>
 
-                <div class="divider-line"></div>
+                {{-- <div class="divider-line"></div>
 
                 <section class="layout-admin">
                     <div class="panel-main">
@@ -98,9 +108,9 @@
                         </div>
                         <div class="preview-article" id="previewArticle"></div>
                     </aside>
-                </section>
+                </section> --}}
 
-                <section class="panel-wide" id="formBuilderSection">
+                {{-- <section class="panel-wide" id="formBuilderSection">
                     <div class="section-heading-inline">
                         <div>
                             <p class="eyebrow">Form Pendaftaran</p>
@@ -124,6 +134,56 @@
                             </ul>
                         </div>
                     </div>
+                </section> --}}
+
+                <section class="panel-wide" id="pembina">
+                    <div class="section-heading-inline wide-stack">
+                        <div>
+                            <p class="eyebrow">Data Pembina</p>
+                            <h3>Daftar Pembina Eskul</h3>
+                        </div>
+                        <div class="toolbar-actions">
+                            {{-- <select id="filterEskul" class="toolbar-select"></select> --}}
+                            {{-- <button class="btn-outline" onclick="exportRegistrants()"><i class="fa-solid fa-file-arrow-down"></i> Export CSV</button> --}}
+                            <button class="btn-red" onclick="openQuestionModal()"><i class="fa-solid fa-plus"></i> Buat Akun Pembina </button>
+                        </div>
+                    </div>
+
+                    <div class="registrant-table-shell">
+                        <div class="reg-table-outer">
+                            <div class="reg-table-wrap">
+                                <table class="reg-table">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Username</th>
+                                            <th>Eskul</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($pembina as $item)
+
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td>{{ $item->username }}</td>
+                                                <td>{{ $item->nama_eskul ?? 'Belum dipilih' }}</td>
+                                                <td>
+                                                    <form action="" method="POST">
+                                                        <button class="btn-red"><i class="fa-solid fa-trash-can"></i></button>
+                                                    </form>
+                                                </td>
+                                            </tr>
+
+                                        @empty
+                                            <td colspan="9" style="text-align: center">Belum ada pendaftar</td>
+                                        @endforelse
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
                 </section>
 
                 <section class="panel-wide" id="registrantSection">
@@ -133,14 +193,54 @@
                             <h3>Daftar siswa yang sudah mengirim formulir</h3>
                         </div>
                         <div class="toolbar-actions">
-                            <select id="filterEskul" class="toolbar-select"></select>
-                            <button class="btn-outline" onclick="exportRegistrants()"><i class="fa-solid fa-file-arrow-down"></i> Export CSV</button>
-                            <button class="btn-red" onclick="clearAllRegistrants()"><i class="fa-solid fa-trash-can"></i> Hapus Semua</button>
+                            {{-- <select id="filterEskul" class="toolbar-select"></select> --}}
+                            {{-- <button class="btn-outline" onclick="exportRegistrants()"><i class="fa-solid fa-file-arrow-down"></i> Export CSV</button>
+                            <button class="btn-red" onclick="clearAllRegistrants()"><i class="fa-solid fa-trash-can"></i> Hapus Semua</button> --}}
                         </div>
                     </div>
 
                     <div class="registrant-table-shell">
-                        <div class="registrant-table" id="registrantTable"></div>
+                        <div class="reg-table-outer">
+                            <div class="reg-table-wrap">
+                                <table class="reg-table">
+                                    <thead>
+                                        <tr>
+                                            <th>No</th>
+                                            <th>Nama</th>
+                                            <th>Kelas</th>
+                                            <th>WhatsApp</th>
+                                            <th>Eskul</th>
+                                            <th>Waktu Daftar</th>
+                                            <th>Alasan</th>
+                                            <th>Kesiapan</th>
+                                            <th>Pengalaman</th>
+                                            <th>Aksi</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse ($pendaftar as $siswa)
+
+                                            <tr>
+                                                <td>{{ $loop->iteration }}</td>
+                                                <td><strong>{{ $siswa->nama_siswa }}</strong></td>
+                                                <td><span class="reg-muted">{{ $siswa->nama_kelas }}</span></td>
+                                                <td><span class="reg-muted">{{ $siswa->no_wa }}</span></td>
+                                                <td><span class="reg-badge"><i class="fa-solid fa-layer-group"></i>{{ $siswa->nama_eskul }}</span></td>
+                                                <td><span class="reg-muted">{{ $siswa->crated_at }}</span></td>
+                                                <td><span class="reg-answer">{{ $siswa->alasan }}</span></td>
+                                                <td><span class="reg-muted">{{ $siswa->kesiapan }}</span></td>
+                                                <td><span class="reg-answer">{{ $siswa->pengalaman }}</span></td>
+                                                <td><button class="reg-btn-del"><i class="fa-solid fa-trash"></i> Hapus</button></td>
+                                            </tr>
+
+                                        @empty
+                                            <td colspan="9" style="text-align: center">Belum ada pendaftar</td>
+                                        @endforelse
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </main>
@@ -261,21 +361,22 @@
                     <input type="text" id="tambahTempat" placeholder="Lokasi kegiatan">
                 </div>
                 <div class="form-group">
-                    <label>KUOTA</label>
-                    <input type="text" id="tambahKuota" placeholder="Contoh: 25 siswa">
+                    <label>AKUN PEMBINA</label>
+                    <select name="id_pemegang" id="">
+                        <option selected disabled>--Pilih Akun Pembina--</option>
+                        @foreach ($pembina as $item)
+                            <option value="{{ $item->id_user }}">{{ $item->username }}</option> 
+                        @endforeach
+                    </select>
                 </div>
             </div>
+            
             <div class="form-group">
-                <label>WARNA COVER (CSS GRADIENT)</label>
-                <input type="text" id="tambahCover" placeholder="linear-gradient(135deg, #9ee6ff 0%, #0d3289 100%)">
-            </div>
-            <div class="form-group">
-                <label>FOTO COVER (OPSIONAL)</label>
+                <label>FOTO COVER</label>
                 <div class="upload-zona">
                     <input type="file" accept="image/*" id="tambahFileInput" onchange="previewTambah(event)">
                     <i class="fa-solid fa-cloud-arrow-up"></i>
                     <span>Pilih gambar untuk cover eskul</span>
-                    <p>Bisa dikosongkan jika ingin memakai cover gradient.</p>
                 </div>
                 <img id="previewTambahImg" class="preview-img" alt="Preview cover baru">
             </div>
@@ -287,39 +388,23 @@
     </div>
 
     <div class="modal-overlay" id="modalQuestion">
-        <div class="modal">
-            <button class="modal-close" onclick="closeModal('modalQuestion')"><i class="fa-solid fa-xmark"></i></button>
-            <h2><i class="fa-solid fa-clipboard-question"></i> Tambah pertanyaan form</h2>
+        <form action="/pembina" method="POST" class="modal">
+            @csrf
+            <button type="button" class="modal-close" onclick="closeModal('modalQuestion')"><i class="fa-solid fa-xmark"></i></button>
+            <h2><i class="fa-solid fa-user"></i> Buat akun pembina</h2>
             <div class="form-group">
-                <label>LABEL PERTANYAAN</label>
-                <input type="text" id="questionLabel" placeholder="Contoh: Prestasi yang pernah diikuti">
-            </div>
-            <div class="form-grid-two">
-                <div class="form-group">
-                    <label>TIPE INPUT</label>
-                    <select id="questionType">
-                        <option value="text">Jawaban singkat</option>
-                        <option value="textarea">Paragraf</option>
-                        <option value="select">Pilihan</option>
-                    </select>
-                </div>
-                <div class="form-group checkbox-group">
-                    <label class="inline-check"><input type="checkbox" id="questionRequired" checked> Wajib diisi</label>
-                </div>
+                <label>Username</label>
+                <input type="text" name="username" placeholder="Contoh: Prestasi yang pernah diikuti">
             </div>
             <div class="form-group">
-                <label>PLACEHOLDER</label>
-                <input type="text" id="questionPlaceholder" placeholder="Teks bantuan untuk siswa">
-            </div>
-            <div class="form-group">
-                <label>OPSIONAL: PILIHAN JAWABAN</label>
-                <textarea id="questionOptions" placeholder="Pisahkan pilihan dengan koma. Contoh: Siap, Masih mempertimbangkan, Belum yakin"></textarea>
+                <label>Password</label>
+                <input type="text" name="password" placeholder="Teks bantuan untuk siswa">
             </div>
             <div class="modal-footer">
-                <button class="btn-outline" onclick="closeModal('modalQuestion')">Batal</button>
-                <button class="btn-yellow" onclick="addQuestion()"><i class="fa-solid fa-plus"></i> Simpan Pertanyaan</button>
+                <button type="button" class="btn-outline" onclick="closeModal('modalQuestion')">Batal</button>
+                <button type="submit" class="btn-yellow"><i class="fa-solid fa-plus"></i> Buat Akun Pembina</button>
             </div>
-        </div>
+        </form>
     </div>
 
     <div class="toast" id="toast">

@@ -23,13 +23,9 @@ class UserController extends Controller
             'password' => bcrypt($validated["password"]),
         ]);
 
-        if($regis){
-            return response()->json([
-                'status' => 'berhasil',
-                'pesan' => 'berhasil register',
-            ], 200);
-        }
+        Auth::login($regis);
 
+        return redirect('/')->with('berhasil', 'Berhasil register');
     }
 
     /**
@@ -42,21 +38,11 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
-        if(!Auth::attempt($validated)){
-            return response()->json([
-                'status' => 'gagal',
-                'pesan' => 'username atau password salah!',
-            ],401);
+        if(Auth::attempt($validated)) {
+            return redirect('/');
         }
 
-        $user = Auth::user();
-        $token = $user->createToken('token')->plainTextToken;
-
-        return response()->json([
-            'status' => 'berhasil',
-            'pesan' => 'berhasil login!',
-            'token' => $token
-        ], 200);
+        return back()->with('error', 'Username atau password salah!')->withInput();
     }
 
     /**
@@ -65,30 +51,22 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $login = Auth::user();
-            if($login->role != "admin") {
-                return response()->json([
-                'status' => 'gagal',
-                'pesan' => 'anda bukan admin!',
-            ], 401);
+        if($login->role != "admin") {
+            return redirect('/');
         }
 
         $request->validate([
-            'username' => 'required|unique:users, username',
+            'username' => 'required|unique:users,username',
             'password' => 'required',
-            'role' => 'required'
         ]);
 
         $user = User::create([
             'username' => $request->username,
             'password' => bcrypt($request->password),
-            'role' => $request->role,
+            'role' => 'pembina',
         ]);
 
-        return response()->json([
-            'status' => 'berhasil',
-            'pesan' => 'berhasil membuat akun!',
-            'data' => $user,
-        ], 200);
+        return redirect()->back()->with('berhasil', 'berhasil membuat akun pembina');
     }
 
     /**
