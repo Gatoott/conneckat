@@ -10,6 +10,31 @@
     <link rel="stylesheet" href="css/login.css">
 </head>
 <body>
+    {{-- notif --}}
+    @if(session('berhasil'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast('{{ session('berhasil') }}');
+        });
+        </script>
+    @endif
+    
+    @if(session('gagal'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                showToast_error('{{ session('gagal') }}');
+            });
+        </script>
+    @endif
+
+    @if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast_error(@json($errors->first()), 'error');
+        });
+        </script>
+    @endif
+
     <header class="auth-header">
         <div class="navbar">
             <a href="index.html" class="brand-link">

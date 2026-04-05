@@ -11,6 +11,44 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
 <body>
+
+    {{-- notif --}}
+
+    <div class="toast" id="toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMsg">Tersimpan</span>
+    </div>
+
+    <div class="toast error" id="toast_error">
+        <i class="fa-solid fa-circle-xmark"></i>
+        <span id="toastMsg_error">Error</span>
+    </div>
+
+    @if(session('berhasil'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast('{{ session("berhasil") }}');
+        });
+        </script>
+    @endif
+    
+    @if(session('gagal'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+                showToast_error('{{ session("gagal") }}');
+            });
+        </script>
+    @endif
+
+    @if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            showToast_error(@json($errors->first()), 'error');
+        });
+        </script>
+    @endif
+
+
     <header>
         <div class="navbar-shell">
             <div class="navbar">
@@ -35,7 +73,17 @@
                     </nav>
     
                     <div class="daftar">
-                        <a href="/login" class="login">login</a>
+                        @if ($user)
+                            <form action="/logout" method="POST">
+                                @csrf
+                                <button type="submit" class="logout">logout</button>
+                            </form>
+                            @if ($user->role == 'admin' || $user->role == 'pembina')
+                                <a href="/admin" class="login">admin</a>
+                            @endif
+                        @else
+                            <a href="/login" class="login">login</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -59,7 +107,7 @@
 
                     <div class="hero-badges">
                         <span><i class="fa-solid fa-school"></i> SMKN 1 Katapang</span>
-                        <span><i class="fa-solid fa-layer-group"></i> 17 eskul aktif</span>
+                        <span><i class="fa-solid fa-layer-group"></i> {{ $total_eskul }} eskul aktif</span>
                         <span><i class="fa-solid fa-file-signature"></i> Form pendaftaran siap pakai</span>
                     </div>
 
@@ -84,7 +132,7 @@
             </div>
 
             <div class="quick-panel">
-                <a href="#tentang-detail" class="quick-link glass-link">
+                <a href="#eskul" class="quick-link glass-link">
                     <i class="fa-regular fa-id-badge"></i>
                     <span>profil eskul</span>
                 </a>
@@ -186,20 +234,20 @@
                             <strong>Data tersimpan</strong>
                             <p>Nama pendaftar, kelas, kontak, eskul tujuan, alasan, waktu kirim, dan jawaban tambahan tersusun dalam format yang mudah direkap.</p>
                         </article>
-                        <article>
+                        {{-- <article>
                             <strong>Bisa disesuaikan</strong>
                             <p>Pertanyaan tambahan seperti motivasi, pengalaman, izin orang tua, atau kesiapan latihan dapat disesuaikan mengikuti kebutuhan seleksi tiap kegiatan.</p>
-                        </article>
+                        </article> --}}
                     </div>
                 </aside>
 
                 <div class="registration-form-shell glass-panel">
-                    <form id="registrationForm" class="registration-form">
+                    <form action="/pendaftaran" method="POST" class="registration-form">
                         @csrf
 
                         <div class="form-group">
                             <label for="namaLengkap">Nama Lengkap</label>
-                            <input id="namaLengkap" name="namaLengkap" type="text" placeholder="Masukkan nama lengkap" required>
+                            <input id="namaLengkap" name="nama_siswa" type="text" placeholder="Masukkan nama lengkap" required>
                         </div>
 
                         <div class="form-group">
@@ -209,12 +257,12 @@
 
                         <div class="form-group">
                             <label for="kontak">Nomor WhatsApp</label>
-                            <input id="kontak" name="kontak" type="number" placeholder="Nomor yang bisa dihubungi" required>
+                            <input id="kontak" name="no_wa" type="text" placeholder="Nomor yang bisa dihubungi" required>
                         </div>
 
                         <div class="form-group">
                             <label for="eskulTujuan">Pilih Eskul</label>
-                            <select id="eskulTujuan" name="eskulTujuan" required>
+                            <select id="eskulTujuan" name="id_eskul" required>
                                 <option value="">Pilih jawaban</option>
                                 @foreach($eskul_list as $eskul)
                                     <option value="{{ $eskul->id_eskul }}">{{ $eskul->nama_eskul }}</option>
@@ -229,8 +277,8 @@
 
                         <div class="form-group">
                             <label for="motivasiLatihan">Kesiapan Mengikuti Latihan</label>
-                            <select id="motivasiLatihan" name="motivasiLatihan" required>
-                                <option value="">Pilih jawaban</option>
+                            <select id="motivasiLatihan" name="kesiapan" required>
+                                <option selected disabled>Pilih jawaban</option>
                                 <option value="Siap hadir rutin">Siap hadir rutin</option>
                                 <option value="Perlu menyesuaikan jadwal">Perlu menyesuaikan jadwal</option>
                                 <option value="Masih mempertimbangkan">Masih mempertimbangkan</option>
@@ -239,7 +287,7 @@
 
                         <div class="form-group full">
                             <label for="pengalamanAwal">Pengalaman atau Kemampuan Awal</label>
-                            <textarea id="pengalamanAwal" name="pengalamanAwal" placeholder="Jelaskan pengalaman, kemampuan, atau hal yang ingin dikembangkan"></textarea>
+                            <textarea id="pengalamanAwal" name="pengalaman" placeholder="Jelaskan pengalaman, kemampuan, atau hal yang ingin dikembangkan"></textarea>
                         </div>
 
                         <div class="submit-row">
@@ -252,7 +300,7 @@
             </div>
         </section>
 
-        <section id="highlight" class="highlight-section">
+        {{-- <section id="highlight" class="highlight-section">
             <div class="section-heading center">
                 <span class="section-badge">Keunggulan Tampilan</span>
                 <h2>Desain dibuat rapi, ringan, dan siap disambungkan ke backend</h2>
@@ -275,7 +323,7 @@
                     <p>Struktur file tetap sederhana dengan HTML, CSS, dan JavaScript terpisah, sehingga lebih gampang disatukan dengan backend saat hosting.</p>
                 </div>
             </div>
-        </section>
+        </section> --}}
 
         <section id="about-project" class="about-section">
             <div class="section-heading center">
@@ -299,19 +347,21 @@
                 <div class="team-grid">
                     <article class="team-card glass-panel">
                         <small>Project Manager</small>
-                        <strong></strong>
+                        <strong>Nindri</strong>
                         <p>Mengatur arah pengerjaan, alur tugas, dan sinkronisasi tim.</p>
                     </article>
                     <article class="team-card glass-panel">
                         <small>Front End</small>
-                        <strong>Ezar</strong>
+                        <strong>Ezar Adrian Khairi</strong>
                         <p>Mengerjakan tampilan antarmuka, landing page, form, dan panel pengguna.</p>
                     </article>
-                    <article class="team-card glass-panel">
-                        <small>Back End</small>
-                        <strong>Arfa</strong>
-                        <p>Menyiapkan logika server, pengolahan data, dan kebutuhan integrasi saat hosting.</p>
-                    </article>
+                    <a href="https://arfa.kesug.com/?i=1" target="_blank" style="text-decoration: none;">
+                        <article class="team-card glass-panel">
+                            <small>Back End</small>
+                            <strong>Muhammad Arfa Nurhalim</strong>
+                            <p>Menyiapkan logika server, pengolahan data, dan kebutuhan integrasi saat hosting.</p>
+                        </article>
+                    </a>
                     <article class="team-card glass-panel">
                         <small>Analisis</small>
                         <strong>Iki & Fauzan</strong>
@@ -319,14 +369,14 @@
                     </article>
                     <article class="team-card glass-panel wide">
                         <small>Design</small>
-                        <strong>Oxa, Ezar, Arfa, Nindri, Rahma</strong>
+                        <strong>Muhammad Oxa</strong>
                         <p>Menyiapkan konsep visual, pemilihan warna, penataan elemen, dan arah estetika project.</p>
                     </article>
                 </div>
             </div>
         </section>
 
-        <footer>
+        {{-- <footer>
             <div class="footer-shell glass-panel">
                 <div>
                     <h3>CONNECKAT</h3>
@@ -339,7 +389,28 @@
                     <a href="#about-project">About Us</a>
                 </div>
             </div>
-        </footer>
+        </footer> --}}
+
+        <footer>
+    <div class="footer-shell">
+        <div class="footer-top">
+            <div class="footer-brand">
+                <h3>CONNECKAT</h3>
+                <p>Media informasi ekstrakurikuler dan pendaftaran siswa SMKN 1 Katapang.</p>
+            </div>
+            <nav class="footer-nav">
+                <a href="#home">Home</a>
+                <a href="#eskul">Eskul</a>
+                <a href="#pendaftaran">Pendaftaran</a>
+                <a href="#about-project">About Us</a>
+            </nav>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; {{ date('Y') }} Conneckat &mdash; SMKN 1 Katapang</span>
+            <span>Made with love by Tim Conneckat</span>
+        </div>
+    </div>
+</footer>
     </main>
 
     <script src="js/index.js"></script>

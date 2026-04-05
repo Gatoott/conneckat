@@ -19,6 +19,8 @@ class Pendaftaran extends Model
         'pengalaman'
     ];
 
+    protected $primaryKey = 'id_Pendaftaran';
+
     public function eskuls() {
         return $this->belongsTo(Eskul::class);
     }

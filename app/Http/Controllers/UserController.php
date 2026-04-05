@@ -39,10 +39,20 @@ class UserController extends Controller
         ]);
 
         if(Auth::attempt($validated)) {
-            return redirect('/');
+            $user = Auth::user();
+            return redirect('/')->with('berhasil', 'Selamat datang kembali ' . $user->username);
         }
 
         return back()->with('error', 'Username atau password salah!')->withInput();
+    }
+
+    public function logout(Request $request) {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('berhasil', 'Berhasil logout');
     }
 
     /**

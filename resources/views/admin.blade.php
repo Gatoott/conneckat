@@ -151,7 +151,7 @@
                     <div class="section-heading-inline wide-stack">
                         <div>
                             <p class="eyebrow">Data Pembina</p>
-                            <h3>Daftar Pembina Eskul</h3>
+                            <h3>Daftar Akun Pembina Eskul</h3>
                         </div>
                         <div class="toolbar-actions">
                             {{-- <select id="filterEskul" class="toolbar-select"></select> --}}
@@ -182,13 +182,15 @@
                                                 <td>
                                                     <form action="{{ route('pembina_destroy', $item->id_user) }}" method="POST">
                                                         @csrf
-                                                        <button type="submit" class="btn-red"><i class="fa-solid fa-trash-can"></i></button>
+                                                        <button class="reg-btn-del" onclick="return confirm('Yakin mau hapus pembina ini?\n\nPerhatian: Eskul yang dipegang pembina ini akan ikut terhapus.')">
+                                                            <i class="fa-solid fa-trash"></i> Hapus
+                                                        </button>
                                                     </form>
                                                 </td>
                                             </tr>
 
                                         @empty
-                                            <td colspan="9" style="text-align: center">Belum ada pendaftar</td>
+                                            <td colspan="9" style="text-align: center">Belum ada akun pembina</td>
                                         @endforelse
                                         
                                     </tbody>
@@ -211,6 +213,8 @@
                         </div>
                     </div>
 
+                    {{-- PENDAFTAR --}}
+                    
                     <div class="registrant-table-shell">
                         <div class="reg-table-outer">
                             <div class="reg-table-wrap">
@@ -235,14 +239,19 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 <td><strong>{{ $siswa->nama_siswa }}</strong></td>
-                                                <td><span class="reg-muted">{{ $siswa->nama_kelas }}</span></td>
+                                                <td><span class="reg-muted">{{ $siswa->kelas }}</span></td>
                                                 <td><span class="reg-muted">{{ $siswa->no_wa }}</span></td>
                                                 <td><span class="reg-badge"><i class="fa-solid fa-layer-group"></i>{{ $siswa->nama_eskul }}</span></td>
-                                                <td><span class="reg-muted">{{ $siswa->crated_at }}</span></td>
+                                                <td><span class="reg-muted">{{ $siswa->created_at }}</span></td>
                                                 <td><span class="reg-answer">{{ $siswa->alasan }}</span></td>
                                                 <td><span class="reg-muted">{{ $siswa->kesiapan }}</span></td>
                                                 <td><span class="reg-answer">{{ $siswa->pengalaman }}</span></td>
-                                                <td><button class="reg-btn-del"><i class="fa-solid fa-trash"></i> Hapus</button></td>
+                                                <td>
+                                                    <form action="{{ route('pendaftar_destroy', $siswa->id_Pendaftaran) }}" method="post">
+                                                        @csrf
+                                                        <button class="reg-btn-del" onclick="return confirm('Yakin mau hapus pendaftar ini?')" ><i class="fa-solid fa-trash"></i> Hapus</button>
+                                                    </form>
+                                                </td>
                                             </tr>
 
                                         @empty
@@ -315,11 +324,11 @@
                 <div class="form-group">
                     <label>FOTO COVER</label>
                     <div class="upload-zona">
-                        <input type="file" accept="image/*" name="foto" onchange="previewTambah(event)">
+                        <input type="file" accept="image/*" name="foto" onchange="previewFotoTambah(event)">
                         <i class="fa-solid fa-cloud-arrow-up"></i>
                         <span>Pilih gambar untuk cover eskul</span>
                     </div>
-                    <img id="previewTambahImg" class="preview-img" alt="Preview cover baru">
+                    <img id="previewFotoTambah" class="preview-img" alt="Preview cover baru">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-outline" onclick="closeModal('modalEdit')">Batal</button>
@@ -409,7 +418,7 @@
                 </div>
             </div>
             
-            <div class="form-group">
+            {{-- <div class="form-group">
                 <label>FOTO COVER</label>
                 <div class="upload-zona">
                     <input type="file" accept="image/*" id="tambahFileInput" onchange="previewTambah(event)" name="foto">
@@ -417,7 +426,18 @@
                     <span>Pilih gambar untuk cover eskul</span>
                 </div>
                 <img id="previewTambahImg" class="preview-img" alt="Preview cover baru">
-            </div>
+            </div> --}}
+
+
+            <div class="form-group">
+                    <label>FOTO COVER</label>
+                    <div class="upload-zona">
+                        <input type="file" accept="image/*" name="foto" onchange="previewTambah(event)">
+                        <i class="fa-solid fa-cloud-arrow-up"></i>
+                        <span>Pilih gambar untuk cover eskul</span>
+                    </div>
+                    <img id="previewTambahImg" class="preview-img" alt="Preview cover baru">
+                </div>
             <div class="modal-footer">
                 <button type="button" class="btn-outline" onclick="closeModal('modalTambah')">Batal</button>
                 <button type="submit" class="btn-yellow"><i class="fa-solid fa-circle-plus"></i> Tambah</button>

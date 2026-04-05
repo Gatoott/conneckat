@@ -16,10 +16,10 @@ return new class extends Migration
             $table->foreignId('id_eskul')->constrained('eskuls','id_eskul');
             $table->string('nama_siswa');
             $table->string('kelas');
-            $table->integer('no_wa');
-            $table->string('alasan');
+            $table->string('no_wa');
+            $table->text('alasan');
             $table->string('kesiapan');
-            $table->string('pengalaman');
+            $table->text('pengalaman');
             $table->timestamps();
         });
     }

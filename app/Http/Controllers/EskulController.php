@@ -14,10 +14,12 @@ class EskulController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
         $eskul_list = Eskul::all();
         $kelas_list = kelas::all();
+        $total_eskul = Eskul::count();
 
-        return view('index', compact('eskul_list', 'kelas_list'));
+        return view('index', compact('eskul_list', 'kelas_list', 'user', 'total_eskul'));
     }
 
     /**

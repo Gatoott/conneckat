@@ -441,6 +441,18 @@ function previewTambah(e) {
     reader.readAsDataURL(file);
 }
 
+function previewFotoTambah(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        const img = document.getElementById('previewFotoTambah');
+        img.src = ev.target.result;
+        img.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
 function toggleSidebar() {
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebarOverlay');
