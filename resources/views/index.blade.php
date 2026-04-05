@@ -9,6 +9,15 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    {{-- pp web --}}
+    <link rel="icon" type="image/png" href="poto/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="poto/favicon.svg" />
+    <link rel="shortcut icon" href="poto/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="poto/apple-touch-icon.png" />
+    <link rel="manifest" href="poto/site.webmanifest" />
+
+
 </head>
 <body>
 
@@ -278,7 +287,7 @@
                         <div class="form-group">
                             <label for="motivasiLatihan">Kesiapan Mengikuti Latihan</label>
                             <select id="motivasiLatihan" name="kesiapan" required>
-                                <option selected disabled>Pilih jawaban</option>
+                                <option value="" selected disabled>Pilih jawaban</option>
                                 <option value="Siap hadir rutin">Siap hadir rutin</option>
                                 <option value="Perlu menyesuaikan jadwal">Perlu menyesuaikan jadwal</option>
                                 <option value="Masih mempertimbangkan">Masih mempertimbangkan</option>
@@ -287,7 +296,7 @@
 
                         <div class="form-group full">
                             <label for="pengalamanAwal">Pengalaman atau Kemampuan Awal</label>
-                            <textarea id="pengalamanAwal" name="pengalaman" placeholder="Jelaskan pengalaman, kemampuan, atau hal yang ingin dikembangkan"></textarea>
+                            <textarea id="pengalamanAwal" name="pengalaman" placeholder="Jelaskan pengalaman, kemampuan, atau hal yang ingin dikembangkan" required></textarea>
                         </div>
 
                         <div class="submit-row">
