@@ -7,6 +7,14 @@
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
     <link rel="stylesheet" href="css/admin.css">
+
+    {{-- pp web --}}
+    <link rel="icon" type="image/png" href="poto/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="poto/favicon.svg" />
+    <link rel="shortcut icon" href="poto/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="poto/apple-touch-icon.png" />
+    <link rel="manifest" href="poto/site.webmanifest" />
+    
 </head>
 <body>
     <div class="admin-shell">
@@ -281,35 +289,35 @@
                 <div class="form-grid-two">
                     <div class="form-group">
                         <label>NAMA ESKUL</label>
-                        <input type="text" name="nama_eskul" id="editNamaEskul" placeholder="Nama eskul">
+                        <input type="text" name="nama_eskul" id="editNamaEskul" placeholder="Nama eskul" required>
                     </div>
                     <div class="form-group">
                         <label>KATEGORI</label>
-                        <input type="text" name="kategori" id="editKategori" placeholder="Kategori">
+                        <input type="text" name="kategori" id="editKategori" placeholder="Kategori" required>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>SLOGAN</label>
-                    <input type="text" name="slogan" id="editSlogan" placeholder="Slogan singkat">
+                    <input type="text" name="slogan" id="editSlogan" placeholder="Slogan singkat" required>
                 </div>
                 <div class="form-group">
                     <label>DESKRIPSI</label>
-                    <textarea name="deskripsi" id="editDeskripsi" placeholder="Deskripsi kegiatan"></textarea>
+                    <textarea name="deskripsi" id="editDeskripsi" placeholder="Deskripsi kegiatan" required></textarea>
                 </div>
                 <div class="form-grid-two">
                     <div class="form-group">
                         <label>PEMBINA</label>
-                        <input type="text" name="nama_pembina" id="editNamaPembina" placeholder="Nama pembina">
+                        <input type="text" name="nama_pembina" id="editNamaPembina" placeholder="Nama pembina" required>
                     </div>
                     <div class="form-group">
                         <label>JADWAL</label>
-                        <input type="text" name="jadwal" id="editJadwal" placeholder="Jadwal">
+                        <input type="text" name="jadwal" id="editJadwal" placeholder="Jadwal" required>
                     </div>
                 </div>
                 <div class="form-grid-two">
                     <div class="form-group">
                         <label>TEMPAT</label>
-                        <input type="text" name="tempat" id="editTempat" placeholder="Tempat">
+                        <input type="text" name="tempat" id="editTempat" placeholder="Tempat" required>
                     </div>
                     <div class="form-group">
                         <label>AKUN PEMBINA</label>
@@ -377,35 +385,35 @@
             <div class="form-grid-two">
                 <div class="form-group">
                     <label>NAMA ESKUL</label>
-                    <input type="text" id="tambahNama" name="nama_eskul" placeholder="Nama eskul baru" value="{{ old('nama_eskul') }}">
+                    <input type="text" id="tambahNama" name="nama_eskul" placeholder="Nama eskul baru" value="{{ old('nama_eskul') }}" required>
                 </div>
                 <div class="form-group">
                     <label>KATEGORI</label>
-                    <input type="text" id="tambahKategori" name="kategori" placeholder="Kategori kegiatan" value="{{ old('kategori') }}"> 
+                    <input type="text" id="tambahKategori" name="kategori" placeholder="Kategori kegiatan" value="{{ old('kategori') }}" required> 
                 </div>
             </div>
             <div class="form-group">
                 <label>SLOGAN</label>
-                <input type="text" id="tambahSlogan" name="slogan" placeholder="Slogan singkat" value="{{ old('slogan') }}">
+                <input type="text" id="tambahSlogan" name="slogan" placeholder="Slogan singkat" value="{{ old('slogan') }}" required>
             </div>
             <div class="form-group">
                 <label>DESKRIPSI</label>
-                <textarea id="tambahDeskripsi" name="deskripsi" placeholder="Deskripsi kegiatan" value="{{ old('deskripsi') }}"></textarea>
+                <textarea id="tambahDeskripsi" name="deskripsi" placeholder="Deskripsi kegiatan" value="{{ old('deskripsi') }}" required></textarea>
             </div>
             <div class="form-grid-two">
                 <div class="form-group">
                     <label>PEMBINA</label>
-                    <input type="text" id="tambahPembina" name="nama_pembina" placeholder="Nama pembina" value="{{ old('nama_pembina') }}">
+                    <input type="text" id="tambahPembina" name="nama_pembina" placeholder="Nama pembina" value="{{ old('nama_pembina') }}" required>
                 </div>
                 <div class="form-group">
                     <label>JADWAL</label>
-                    <input type="text" id="tambahJadwal" name="jadwal" placeholder="Contoh: Jumat, 15.30 - 17.00 WIB" value="{{ old('jadwal') }}">
+                    <input type="text" id="tambahJadwal" name="jadwal" placeholder="Contoh: Jumat, 15.30 - 17.00 WIB" value="{{ old('jadwal') }}" required>
                 </div>
             </div>
             <div class="form-grid-two">
                 <div class="form-group">
                     <label>TEMPAT</label>
-                    <input type="text" id="tambahTempat" name="tempat" placeholder="Lokasi kegiatan" value="{{ old('tempat') }}">
+                    <input type="text" id="tambahTempat" name="tempat" placeholder="Lokasi kegiatan" value="{{ old('tempat') }}" required>
                 </div>
                 <div class="form-group">
                     <label>AKUN PEMBINA</label>
@@ -432,7 +440,7 @@
             <div class="form-group">
                     <label>FOTO COVER</label>
                     <div class="upload-zona">
-                        <input type="file" accept="image/*" name="foto" onchange="previewTambah(event)">
+                        <input type="file" accept="image/*" name="foto" onchange="previewTambah(event)" required>
                         <i class="fa-solid fa-cloud-arrow-up"></i>
                         <span>Pilih gambar untuk cover eskul</span>
                     </div>
@@ -452,11 +460,11 @@
             <h2><i class="fa-solid fa-user"></i> Buat akun pembina</h2>
             <div class="form-group">
                 <label>Username</label>
-                <input type="text" name="username" placeholder="Contoh: Prestasi yang pernah diikuti">
+                <input type="text" name="username" placeholder="Contoh: Prestasi yang pernah diikuti" required>
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="text" name="password" placeholder="Teks bantuan untuk siswa">
+                <input type="text" name="password" placeholder="Teks bantuan untuk siswa" required>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn-outline" onclick="closeModal('modalQuestion')">Batal</button>

@@ -8,6 +8,14 @@
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
     <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
     <link rel="stylesheet" href="css/login.css">
+
+    {{-- pp web --}}
+    <link rel="icon" type="image/png" href="poto/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="poto/favicon.svg" />
+    <link rel="shortcut icon" href="poto/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="poto/apple-touch-icon.png" />
+    <link rel="manifest" href="poto/site.webmanifest" />
+
 </head>
 <body>
     {{-- notif --}}
