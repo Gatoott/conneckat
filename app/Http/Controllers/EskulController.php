@@ -14,18 +14,12 @@ class EskulController extends Controller
      */
     public function index()
     {
+        $user = Auth::user();
         $eskul_list = Eskul::all();
         $kelas_list = kelas::all();
+        $total_eskul = Eskul::count();
 
-        return view('index', compact('eskul_list', 'kelas_list'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        return view('index', compact('eskul_list', 'kelas_list', 'user', 'total_eskul'));
     }
 
     /**
@@ -35,78 +29,100 @@ class EskulController extends Controller
     {
         $user = Auth::user();
 
-        if($user->role != 'pembina') {
-            return response()->json([
-                'pesan' => 'anda bukan pembina eskul'
-            ], 403);
+        if(!$user) {
+            return view('/login');
+        }
+
+        if($user->role != 'admin') {
+            return view('/');
         }
 
         $request->validate([
             'nama_eskul' => 'required',
+            'kategori' => 'required',
             'slogan' => 'required',
             'deskripsi' => 'required',
-            'pendaftaran' => 'required',
-            'logo' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'dokumentasi' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'nama_pembina' => 'required',
+            'jadwal' => 'required',
+            'tempat' => 'required',
+            'id_pemegang' => 'required',
+            'foto' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        $logo = $request->file('logo');
-        $dokumentasi = $request->file('dokumentasi');
+        $foto = $request->file('foto');
 
-        $file_logo = time(). '-' . $logo->getClientOriginalName();
-        $file_dokumentasi = time(). '-' . $dokumentasi->getClientOriginalName();
+        $file_foto = time(). '-' . $foto->getClientOriginalName();
         
-        $logo->move(public_path('uploads'), $file_logo);
-        $dokumentasi->move(public_path('uploads'), $file_dokumentasi);
+        $foto->move(public_path('uploads'), $file_foto);
 
         $eskul = Eskul::create([
-            'id_pemegang' => Auth::id(),
             'nama_eskul' => $request->nama_eskul,
+            'kategori' => $request->kategori,
             'slogan' => $request->slogan,
             'deskripsi' => $request->deskripsi,
-            'logo' => $request->logo,
-            'dokumentasi' => $request->dokumentasi,
-            'pendaftaran' => $request->pendaftaran
+            'nama_pembina' => $request->nama_pembina,
+            'jadwal' => $request->jadwal,
+            'tempat' => $request->tempat,
+            'id_pemegang' => $request->id_pemegang,
+            'foto' => $file_foto,
         ]);
 
-        return response()->json([
-            'messagge' => 'Berhasil membuat eskul!',
-            'data' => $eskul,
-            'logo' => asset('uploads/'. $file_logo),
-            'dokumentasi' => asset('uploads/'. $file_dokumentasi),
-        ], 200);
+        if(!$eskul) {
+            return redirect()->back()->with('gagal', 'Gagal membuat eskul');
+        }
+        return redirect()->back()->with('berhasil', 'Berhasil membuat eskul');
 
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Eskul $eskul)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Eskul $eskul)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Eskul $eskul)
+    public function update(Request $request, $id_eskul)
     {
-        //
+        $eskul = Eskul::findOrFail($id_eskul);
+
+        $request->validate([
+            'nama_eskul' => 'required',
+            'kategori' => 'required',
+            'slogan' => 'required',
+            'deskripsi' => 'required',
+            'nama_pembina' => 'required',
+            'jadwal' => 'required',
+            'tempat' => 'required',
+            'id_pemegang' => 'required',
+        ]);
+
+        if($request->hasFile('foto')) {
+            $foto = $request->file('foto');
+            $file_foto = time(). '-' . $foto->getClientOriginalName();
+            $foto->move(public_path('uploads'), $file_foto);
+
+            $eskul->foto = $file_foto;
+        }
+
+        $eskul->update([
+            'nama_eskul' => $request->nama_eskul,
+            'kategori' => $request->kategori,
+            'slogan' => $request->slogan,
+            'deskripsi' => $request->deskripsi,
+            'nama_pembina' => $request->nama_pembina,
+            'jadwal' => $request->jadwal,
+            'tempat' => $request->tempat,
+            'id_pemegang' => $request->id_pemegang,
+        ]);
+
+        return redirect()->back()->with('berhasil', 'Berhasil mengedit eskul!');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Eskul $eskul)
+    public function destroy($id_eskul)
     {
-        //
+        $eskul = Eskul::findOrFail($id_eskul);
+
+        $eskul->delete();
+
+        return redirect()->back()->with('berhasil', 'Berhasil mengahapus Eskul');
     }
 }

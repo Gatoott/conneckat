@@ -166,6 +166,71 @@ img{
     margin-top:26px;
 }
 
+.sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(3, 7, 25, 0.60);
+    z-index: 98;
+    backdrop-filter: blur(4px);
+}
+
+.sidebar-overlay.show {
+    display: block;
+}
+
+.mobile-topbar {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 150;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: rgba(5, 12, 42, 0.90);
+    border-bottom: 1px solid var(--line);
+    backdrop-filter: blur(16px);
+}
+
+.mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.mobile-brand img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+    border-radius: 10px;
+    background: #fff;
+    padding: 4px;
+}
+
+.mobile-brand span {
+    font-weight: 800;
+    font-size: .92rem;
+    letter-spacing: .1em;
+    color: var(--gold-soft);
+}
+
+.sidebar-hamburger {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: none;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid var(--line);
+    color: #fff;
+    font-size: 1.1rem;
+    cursor: pointer;
+}
+
 .logout-btn,
 .topbar-home,
 .btn-yellow,
@@ -874,6 +939,175 @@ select:focus{
     color:var(--success);
 }
 
+.toast.error i {
+    color: var(--danger);
+}
+
+.toast.error {
+    border-color: rgba(255, 111, 125, 0.42);
+}
+
+.reg-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+}
+
+.reg-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: .92rem;
+}
+
+.reg-table thead tr {
+    background: rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid var(--line);
+}
+
+.reg-table thead th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: .76rem;
+    font-weight: 800;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    white-space: nowrap;
+}
+
+.reg-table tbody tr {
+    border-bottom: 1px solid var(--line);
+    transition: background-color .2s ease;
+}
+
+.reg-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.reg-table tbody tr:hover {
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.reg-table tbody td {
+    padding: 14px 16px;
+    color: var(--text);
+    vertical-align: middle;
+}
+
+.reg-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.10);
+    border: 1px solid var(--line);
+    font-size: .82rem;
+    font-weight: 700;
+    color: var(--gold-soft);
+    white-space: nowrap;
+}
+
+.reg-muted {
+    color: var(--muted);
+    font-size: .85rem;
+}
+
+.reg-answer {
+    max-width: 220px;
+    line-height: 1.6;
+    color: var(--text);
+}
+
+.reg-btn-del {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 111, 125, 0.42);
+    background: rgba(255, 111, 125, 0.08);
+    color: #ffd7dd;
+    font-size: .84rem;
+    font-weight: 700;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background-color .2s ease, transform .2s ease;
+}
+
+.reg-btn-del:hover {
+    background: rgba(255, 111, 125, 0.18);
+    transform: translateY(-2px);
+}
+
+.reg-table-outer {
+    width: 100%;
+    overflow: hidden;
+}
+
+.reg-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+}
+
+.reg-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    font-size: .92rem;
+}
+
+.main {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.content {
+    min-width: 0;
+}
+
+.panel-wide {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.registrant-table-shell {
+    min-width: 0;
+}
+
+.reg-table-outer {
+    width: 100%;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.reg-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+}
+
+.reg-table {
+    width: 100%;
+    min-width: 720px;
+    border-collapse: collapse;
+    font-size: .92rem;
+}
+
+.card-actions form {
+    display: inline-flex;
+}
+
+.card-actions .btn-red {
+    width: auto;
+}
+
 @media (max-width: 1180px){
     .layout-admin,
     .hero-admin,
@@ -900,8 +1134,55 @@ select:focus{
 }
 
 @media (max-width: 720px){
-    .main{
-        padding:14px;
+    .card-actions {
+        flex-direction: row;
+        flex-wrap: nowrap;
+    }
+
+    .card-actions .btn-yellow {
+        flex: 1;
+    }
+
+    .card-actions form {
+        display: inline-flex;
+    }
+
+    .card-actions .btn-red {
+        width: auto;
+    }
+
+    .mobile-topbar {
+        display: flex;
+    }
+
+    .main {
+        padding-top: 72px;
+    }
+    
+    .admin-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .sidebar-hamburger {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .sidebar {
+        position: fixed;
+        padding-top: 72px;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 99;
+        transform: translateX(-100%);
+        transition: transform .30s ease;
+        border-right: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
     }
 
     .topbar,
@@ -917,7 +1198,6 @@ select:focus{
     .toolbar-actions,
     .table-head,
     .modal-footer,
-    .card-actions,
     .answer-grid,
     .form-grid-two{
         grid-template-columns:1fr;
@@ -932,4 +1212,25 @@ select:focus{
     .toolbar-select{
         width:100%;
     }
+
+    .panel-wide {
+        overflow: hidden;
+    }
+
+    .reg-table-wrap {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -24px;
+        padding: 0 24px;
+        width: calc(100% + 48px);
+    }
+
+    .reg-table {
+        min-width: 720px;
+    }
+
+    .reg-answer {
+        max-width: 160px;
+    }
+    
 }

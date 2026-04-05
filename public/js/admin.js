@@ -390,21 +390,30 @@ function renderRegistrantTable() {
     }).join('');
 }
 
-function openEditModal(id) {
-    const item = eskulData[id];
-    if (!item) return;
-    document.getElementById('editId').value = id;
-    document.getElementById('editNama').value = item.nama || '';
-    document.getElementById('editKategori').value = item.kategori || '';
-    document.getElementById('editSlogan').value = item.slogan || '';
-    document.getElementById('editDeskripsi').value = item.deskripsi || '';
-    document.getElementById('editPembina').value = item.pembina || '';
-    document.getElementById('editJadwal').value = item.jadwal || '';
-    document.getElementById('editTempat').value = item.tempat || '';
-    document.getElementById('editKuota').value = item.kuota || '';
-    document.getElementById('editCover').value = item.cover || '';
-    document.getElementById('modalEdit').classList.add('show');
+function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+    if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.replace('fa-eye', 'fa-eye-slash');
+    } else {
+        input.type = 'password';
+        icon.classList.replace('fa-eye-slash', 'fa-eye');
+    }
 }
+
+function openEditModal(id, nama, kategori, slogan, deskripsi, pembina, jadwal, tempat, idPemegang) {
+    document.getElementById('formEdit').action = '/eskul/' + id;
+    document.getElementById('editNamaEskul').value = nama;
+    document.getElementById('editKategori').value = kategori;
+    document.getElementById('editSlogan').value = slogan;
+    document.getElementById('editDeskripsi').value = deskripsi;
+    document.getElementById('editNamaPembina').value = pembina;
+    document.getElementById('editJadwal').value = jadwal;
+    document.getElementById('editTempat').value = tempat;
+    document.getElementById('editIdPemegang').value = idPemegang;
+    document.getElementById('modalEdit').classList.add('show');
+}   
 
 function openUploadModal(id) {
     document.getElementById('uploadId').value = id;
@@ -415,27 +424,46 @@ function openUploadModal(id) {
 }
 
 function openTambahModal() {
-    document.getElementById('tambahNama').value = '';
-    document.getElementById('tambahKategori').value = '';
-    document.getElementById('tambahSlogan').value = '';
-    document.getElementById('tambahDeskripsi').value = '';
-    document.getElementById('tambahPembina').value = '';
-    document.getElementById('tambahJadwal').value = '';
-    document.getElementById('tambahTempat').value = '';
-    document.getElementById('tambahKuota').value = '';
-    document.getElementById('tambahCover').value = defaultCover(nextId);
-    document.getElementById('tambahFileInput').value = '';
     document.getElementById('previewTambahImg').style.display = 'none';
     tambahFile = null;
     document.getElementById('modalTambah').classList.add('show');
 }
 
+function previewTambah(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        const img = document.getElementById('previewTambahImg');
+        img.src = ev.target.result;
+        img.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+function previewFotoTambah(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+        const img = document.getElementById('previewFotoTambah');
+        img.src = ev.target.result;
+        img.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+}
+
+function toggleSidebar() {
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebarOverlay');
+    const icon = document.getElementById('sidebarIcon');
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('show');
+    icon.classList.toggle('fa-bars');
+    icon.classList.toggle('fa-xmark');
+}
+
 function openQuestionModal() {
-    document.getElementById('questionLabel').value = '';
-    document.getElementById('questionType').value = 'text';
-    document.getElementById('questionPlaceholder').value = '';
-    document.getElementById('questionOptions').value = '';
-    document.getElementById('questionRequired').checked = true;
     document.getElementById('modalQuestion').classList.add('show');
 }
 
@@ -449,219 +477,16 @@ document.querySelectorAll('.modal-overlay').forEach((el) => {
     });
 });
 
-function simpanEdit() {
-    const id = document.getElementById('editId').value;
-    const nama = document.getElementById('editNama').value.trim();
-    if (!nama) { showToast('Nama eskul tidak boleh kosong.'); return; }
-
-    Object.assign(eskulData[id], {
-        nama,
-        kategori: document.getElementById('editKategori').value.trim(),
-        slogan: document.getElementById('editSlogan').value.trim(),
-        deskripsi: document.getElementById('editDeskripsi').value.trim(),
-        pembina: document.getElementById('editPembina').value.trim(),
-        jadwal: document.getElementById('editJadwal').value.trim(),
-        tempat: document.getElementById('editTempat').value.trim(),
-        kuota: document.getElementById('editKuota').value.trim(),
-        cover: document.getElementById('editCover').value.trim() || defaultCover(Number(id))
-    });
-
-    persistData();
-    rerenderAll();
-    setPreview(Number(id));
-    closeModal('modalEdit');
-    showToast('Profil eskul berhasil diperbarui.');
-}
-
-function previewFoto(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    currentUploadFile = file;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        const img = document.getElementById('previewImg');
-        img.src = ev.target.result;
-        img.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-}
-
-function previewTambah(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    tambahFile = file;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        const img = document.getElementById('previewTambahImg');
-        img.src = ev.target.result;
-        img.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-}
-
-function simpanFoto() {
-    const id = document.getElementById('uploadId').value;
-    if (!currentUploadFile) { showToast('Pilih gambar terlebih dahulu.'); return; }
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-        eskulData[id].foto = ev.target.result;
-        persistData();
-        rerenderAll();
-        setPreview(Number(id));
-        closeModal('modalUpload');
-        showToast('Cover eskul berhasil diperbarui.');
-    };
-    reader.readAsDataURL(currentUploadFile);
-}
-
-function tambahEskul() {
-    const nama = document.getElementById('tambahNama').value.trim();
-    if (!nama) { showToast('Nama eskul tidak boleh kosong.'); return; }
-
-    const id = nextId++;
-    eskulData[id] = {
-        nama,
-        kategori: document.getElementById('tambahKategori').value.trim(),
-        slogan: document.getElementById('tambahSlogan').value.trim(),
-        deskripsi: document.getElementById('tambahDeskripsi').value.trim(),
-        pembina: document.getElementById('tambahPembina').value.trim(),
-        jadwal: document.getElementById('tambahJadwal').value.trim(),
-        tempat: document.getElementById('tambahTempat').value.trim(),
-        kuota: document.getElementById('tambahKuota').value.trim(),
-        cover: document.getElementById('tambahCover').value.trim() || defaultCover(id),
-        foto: ''
-    };
-
-    const finish = () => {
-        persistData();
-        rerenderAll();
-        setPreview(id);
-        closeModal('modalTambah');
-        showToast('Eskul baru berhasil ditambahkan.');
-    };
-
-    if (tambahFile) {
-        const reader = new FileReader();
-        reader.onload = (ev) => {
-            eskulData[id].foto = ev.target.result;
-            finish();
-        };
-        reader.readAsDataURL(tambahFile);
-        return;
-    }
-
-    finish();
-}
-
-function hapusEskul(id) {
-    const item = eskulData[id];
-    if (!item) return;
-    if (!confirm(`Hapus eskul ${item.nama}?`)) return;
-    delete eskulData[id];
-    persistData();
-    rerenderAll();
-    const firstId = Object.keys(eskulData).map(Number).sort((a, b) => a - b)[0];
-    if (firstId) setPreview(firstId);
-    else document.getElementById('previewArticle').innerHTML = '<div class="empty-block">Belum ada data eskul.</div>';
-    showToast('Eskul berhasil dihapus.');
-}
-
-function addQuestion() {
-    const label = document.getElementById('questionLabel').value.trim();
-    const type = document.getElementById('questionType').value;
-    const placeholder = document.getElementById('questionPlaceholder').value.trim();
-    const required = document.getElementById('questionRequired').checked;
-    const optionsRaw = document.getElementById('questionOptions').value.trim();
-
-    if (!label) { showToast('Label pertanyaan tidak boleh kosong.'); return; }
-
-    const field = {
-        id: `${makeSlug(label)}-${Date.now()}`,
-        label,
-        type,
-        placeholder,
-        required,
-        full: type === 'textarea',
-        options: type === 'select' ? optionsRaw.split(',').map((item) => item.trim()).filter(Boolean) : []
-    };
-
-    if (type === 'select' && !field.options.length) {
-        showToast('Tipe pilihan memerlukan daftar opsi.');
-        return;
-    }
-
-    extraFields.push(field);
-    persistFields();
-    renderSummaryCards();
-    renderQuestionList();
-    closeModal('modalQuestion');
-    showToast('Pertanyaan baru berhasil ditambahkan.');
-}
-
-function removeQuestion(index) {
-    if (!confirm('Hapus pertanyaan ini dari form pendaftaran?')) return;
-    extraFields.splice(index, 1);
-    persistFields();
-    renderSummaryCards();
-    renderQuestionList();
-    showToast('Pertanyaan berhasil dihapus.');
-}
-
-function deleteRegistrant(id) {
-    if (!confirm('Hapus data pendaftar ini?')) return;
-    registrations = registrations.filter((item) => item.id !== id);
-    persistRegistrations();
-    renderSummaryCards();
-    renderRegistrantTable();
-    showToast('Data pendaftar berhasil dihapus.');
-}
-
-function clearAllRegistrants() {
-    if (!registrations.length) {
-        showToast('Belum ada data pendaftar untuk dihapus.');
-        return;
-    }
-    if (!confirm('Hapus seluruh data pendaftar?')) return;
-    registrations = [];
-    persistRegistrations();
-    renderSummaryCards();
-    renderRegistrantTable();
-    showToast('Semua data pendaftar telah dihapus.');
-}
-
-function csvEscape(value) {
-    const safe = String(value ?? '');
-    return `"${safe.replace(/"/g, '""')}"`;
-}
-
-function exportRegistrants() {
-    if (!registrations.length) {
-        showToast('Belum ada data pendaftar untuk diexport.');
-        return;
-    }
-    const fieldMap = getFieldMap();
-    const answerKeys = Array.from(new Set(registrations.flatMap((item) => Object.keys(item.answers || {}))));
-    const header = ['id', 'submittedAt', 'eskul', ...answerKeys.map((key) => fieldMap[key] || key)];
-    const rows = registrations.map((entry) => {
-        const answerCols = answerKeys.map((key) => csvEscape(entry.answers?.[key] || ''));
-        return [csvEscape(entry.id), csvEscape(entry.submittedAt), csvEscape(entry.eskul || ''), ...answerCols].join(',');
-    });
-    const csv = [header.map(csvEscape).join(','), ...rows].join('\n');
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'conneckat_pendaftar.csv';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-    showToast('Data pendaftar berhasil diexport ke CSV.');
-}
-
 function showToast(msg) {
     const toast = document.getElementById('toast');
     document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+function showToast_error(msg) {
+    const toast = document.getElementById('toast_error');
+    document.getElementById('toastMsg_error').textContent = msg;
     toast.classList.add('show');
     setTimeout(() => toast.classList.remove('show'), 2800);
 }

@@ -44,6 +44,28 @@ function togglePassword(inputId, iconId) {
     }
 }
 
+function toggleMenu() {
+    const navWrap = document.getElementById('navWrap');
+    const icon = document.getElementById('hamburgerIcon');
+    navWrap.classList.toggle('open');
+    icon.classList.toggle('fa-bars');
+    icon.classList.toggle('fa-xmark');
+}
+
+function showToast(msg) {
+    const toast = document.getElementById('toast');
+    document.getElementById('toastMsg').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
+function showToast_error(msg) {
+    const toast = document.getElementById('toast_error');
+    document.getElementById('toastMsg_error').textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2800);
+}
+
 // (function () {
 //     const STORAGE_KEY = 'conneckatEskulDataV2';
 //     const FORM_STORAGE_KEY = 'conneckatRegistrationFieldsV2';

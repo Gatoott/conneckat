@@ -10,11 +10,16 @@ class Pendaftaran extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_kelas',
         'id_eskul',
         'nama_siswa',
-        'alasan'
+        'kelas',
+        'no_wa',
+        'alasan',
+        'kesiapan',
+        'pengalaman'
     ];
+
+    protected $primaryKey = 'id_Pendaftaran';
 
     public function eskuls() {
         return $this->belongsTo(Eskul::class);

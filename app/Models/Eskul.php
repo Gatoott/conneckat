@@ -10,14 +10,17 @@ class Eskul extends Model
     use HasFactory;
 
     protected $fillable = [
-        'id_pemegang',
+        'id_eskul',
         'nama_eskul',
+        'kategori',
         'slogan',
         'deskripsi',
-        'logo',
-        'dokumentasi',
-        'pendaftaran',
-    ];
+        'nama_pembina',
+        'jadwal',
+        'tempat',
+        'id_pemegang',
+        'foto',
+];
 
     protected $primaryKey = 'id_eskul';
 

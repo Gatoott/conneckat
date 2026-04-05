@@ -23,13 +23,9 @@ class UserController extends Controller
             'password' => bcrypt($validated["password"]),
         ]);
 
-        if($regis){
-            return response()->json([
-                'status' => 'berhasil',
-                'pesan' => 'berhasil register',
-            ], 200);
-        }
+        Auth::login($regis);
 
+        return redirect('/')->with('berhasil', 'Berhasil register');
     }
 
     /**
@@ -42,21 +38,21 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
-        if(!Auth::attempt($validated)){
-            return response()->json([
-                'status' => 'gagal',
-                'pesan' => 'username atau password salah!',
-            ],401);
+        if(Auth::attempt($validated)) {
+            $user = Auth::user();
+            return redirect('/')->with('berhasil', 'Selamat datang kembali ' . $user->username);
         }
 
-        $user = Auth::user();
-        $token = $user->createToken('token')->plainTextToken;
+        return back()->with('error', 'Username atau password salah!')->withInput();
+    }
 
-        return response()->json([
-            'status' => 'berhasil',
-            'pesan' => 'berhasil login!',
-            'token' => $token
-        ], 200);
+    public function logout(Request $request) {
+        Auth::logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('berhasil', 'Berhasil logout');
     }
 
     /**
@@ -65,61 +61,32 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $login = Auth::user();
-            if($login->role != "admin") {
-                return response()->json([
-                'status' => 'gagal',
-                'pesan' => 'anda bukan admin!',
-            ], 401);
+        if($login->role != "admin") {
+            return redirect('/');
         }
 
         $request->validate([
-            'username' => 'required|unique:users, username',
+            'username' => 'required|unique:users,username',
             'password' => 'required',
-            'role' => 'required'
         ]);
 
         $user = User::create([
             'username' => $request->username,
             'password' => bcrypt($request->password),
-            'role' => $request->role,
+            'role' => 'pembina',
         ]);
 
-        return response()->json([
-            'status' => 'berhasil',
-            'pesan' => 'berhasil membuat akun!',
-            'data' => $user,
-        ], 200);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        return redirect()->back()->with('berhasil', 'berhasil membuat akun pembina');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id_user)
     {
-        //
+        $user = User::findOrFail($id_user);
+        $user->delete();
+
+        return redirect()->back()->with('berhasil', 'Berhasil menghapus akun pembina');
     }
 }
